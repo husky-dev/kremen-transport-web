@@ -9,49 +9,36 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: 'Notify: preparing'
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_TO }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          format: markdown
-          args: |
-            🆕 *kremen/transport-web:* preparing for the new build
-      - uses: actions/checkout@v1
-      - run: yarn install
-      - name: Preparing .env file
-        run: 'echo "MAPS_API_KEY_PROD=$MAPS_API_KEY_PROD" > .env'
-        env:
-          MAPS_API_KEY_PROD: ${{secrets.MAPS_API_KEY_PROD}}
-      - name: 'Notify: build started'
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_TO }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          format: markdown
-          args: |
-            🔥 *kremen/transport-web:* build started
-      - run: yarn dist:prod
-      - name: 'Notify: build finished'
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_TO }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          format: markdown
-          args: |
-            🔥 *kremen/transport-web:* build finished
-      - name: Deploy to Firebase
-        uses: w9jds/firebase-action@master
-        with:
-          args: deploy --only hosting
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-      - name: 'Notify: finished'
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_TO }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          format: markdown
-          args: |
-            🏁 *kremen/transport-web:* new version deployed successfully
-  
+    - uses: actions/checkout@v2
+    - name: "Env: set package version"
+      run: >
+        echo "APP_VERSION=$(cat package.json | grep version | head -1 | awk
+        -F: '{ print $2 }' | sed 's/[",\t ]//g')" >> $GITHUB_ENV
+    - name: "Env: setup PRD environment"
+      env:
+        ENV_FILE: ${{secrets.ENV_PRD}}
+      run: |
+        echo "$ENV_FILE" > .env
+        cat .env >> $GITHUB_ENV
+    - name: Login
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.CR_PAT }}
+    - name: Build
+      run: |
+        docker build -t ghcr.io/husky-dev/kremen-transport-web/app:latest .
+        docker build -t ghcr.io/husky-dev/kremen-transport-web/app:$APP_VERSION .
+    - name: Push
+      run: |
+        docker push ghcr.io/husky-dev/kremen-transport-web/app:latest
+        docker push ghcr.io/husky-dev/kremen-transport-web/app:$APP_VERSION
+    - name: 'Notify: done'
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_TO }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        format: markdown
+        message: |
+          🏁 *kremen-transport-web:* ${{ env.APP_VERSION }} deployed successfully
