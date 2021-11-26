@@ -15,13 +15,13 @@ export const defServices: Service[] = [
     url: 'https://transport.kremen.dev',
     color: '#3273dc',
   },
-  {
-    id: '@kremen/deputies-web',
-    title: '#Кремінь.Депутат',
-    descr: "Карта виборчих округів дозволяє вам дізнатись хто є депутатом вашого району та як з ним зв'язатись",
-    url: 'https://deputat.kremen.dev',
-    color: '#ECB400',
-  },
+  // {
+  //   id: '@kremen/deputies-web',
+  //   title: '#Кремінь.Депутат',
+  //   descr: "Карта виборчих округів дозволяє вам дізнатись хто є депутатом вашого району та як з ним зв'язатись",
+  //   url: 'https://deputat.kremen.dev',
+  //   color: '#ECB400',
+  // },
   {
     id: '@kremen/equipment-web',
     title: '#Кремінь.Техніка',
