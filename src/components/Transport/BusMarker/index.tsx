@@ -1,9 +1,9 @@
 /* eslint-disable max-len */
-import { TransportBus, TransportRoute, TransportType } from 'core/api';
-import { offlineColors } from 'core';
+import { TransportBus, TransportRoute, TransportType } from '@core/api';
+import { offlineColors } from '@core';
 import React, { FC, useMemo } from 'react';
 import { Marker } from 'react-google-maps';
-import { ColorsSet } from 'styles';
+import { ColorsSet } from '@styles';
 
 import BusPopup from './components/BusPopup';
 

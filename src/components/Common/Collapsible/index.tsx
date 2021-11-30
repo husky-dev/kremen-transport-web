@@ -3,7 +3,7 @@
 /* eslint-disable react/no-deprecated */
 import React, { PureComponent, ReactNode } from 'react';
 import { Motion, spring } from 'react-motion';
-import { Style, ViewStyleProps } from 'styles';
+import { Style, ViewStyleProps } from '@styles';
 
 const SpringPrecision = 1;
 

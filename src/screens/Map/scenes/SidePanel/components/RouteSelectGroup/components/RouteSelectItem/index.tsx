@@ -1,8 +1,8 @@
-import { Checkbox, View } from 'components/Common';
-import { clearRouteNumber, routeToColor } from 'core';
-import { TransportRoute } from 'core/api';
+import { Checkbox, View } from '@components/Common';
+import { clearRouteNumber, routeToColor } from '@core';
+import { TransportRoute } from '@core/api';
 import React, { FC } from 'react';
-import { m, Styles, ViewStyleProps } from 'styles';
+import { m, Styles, ViewStyleProps } from '@styles';
 
 interface Props extends ViewStyleProps {
   checked?: boolean;

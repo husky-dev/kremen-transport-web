@@ -1,8 +1,8 @@
-import { Checkbox, View } from 'components/Common';
-import { TransportRoute } from 'core/api';
+import { Checkbox, View } from '@components/Common';
+import { TransportRoute } from '@core/api';
 import { includes, uniq } from 'lodash';
 import React, { FC, ReactNode } from 'react';
-import { m, Styles, ViewStyleProps } from 'styles';
+import { m, Styles, ViewStyleProps } from '@styles';
 
 import RouteSelectItem from './components/RouteSelectItem';
 

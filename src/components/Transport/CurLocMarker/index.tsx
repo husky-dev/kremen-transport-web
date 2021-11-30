@@ -1,8 +1,8 @@
 /* eslint-disable max-len */
 import React, { FC } from 'react';
 import { Marker } from 'react-google-maps';
-import { colorSetFromColor, colors } from 'styles';
-import { LatLng } from 'utils';
+import { colorSetFromColor, colors } from '@styles';
+import { LatLng } from '@utils';
 
 interface Props {
   position: LatLng;

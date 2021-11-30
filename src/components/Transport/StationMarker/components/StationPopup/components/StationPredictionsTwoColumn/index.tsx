@@ -1,13 +1,13 @@
-import { View } from 'components/Common';
-import { RouteCircle } from 'components/Transport';
-import { findRouteWithId, sortRoutes } from 'core';
-import { TransportPrediction, TransportRoute, TransportStation } from 'core/api';
+import { View } from '@components/Common';
+import { RouteCircle } from '@components/Transport';
+import { findRouteWithId, sortRoutes } from '@core';
+import { TransportPrediction, TransportRoute, TransportStation } from '@core/api';
 import { compact, sortBy, uniq } from 'lodash';
 import React, { FC } from 'react';
-import { useSelector } from 'store';
-import { m, Styles, ViewStyleProps } from 'styles';
+import { m, Styles, ViewStyleProps } from '@styles';
 
 interface Props extends ViewStyleProps {
+  routes: TransportRoute[];
   station: TransportStation;
   predictions: TransportPrediction[];
 }
@@ -20,9 +20,8 @@ const numToTimeStr = (val: number): string => {
   return `${mins} хв.`;
 };
 
-const StationPredictionsTwoColumn: FC<Props> = ({ style, predictions, station }) => {
+const StationPredictionsTwoColumn: FC<Props> = ({ style, predictions, station, routes }) => {
   const rids = uniq(predictions.map(item => item.rid));
-  const routes = useSelector(s => s.transport.routes);
   const predictionRoutes = sortRoutes(compact(rids.map(rid => findRouteWithId(routes, rid))));
 
   const timesForRoute = (route: TransportRoute): number[] => {

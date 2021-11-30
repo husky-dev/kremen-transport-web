@@ -1,8 +1,8 @@
-import { View } from 'components/Common';
-import { clearRouteNumber, routeToColor } from 'core';
-import { TransportRoute } from 'core/api';
+import { View } from '@components/Common';
+import { clearRouteNumber, routeToColor } from '@core';
+import { TransportRoute } from '@core/api';
 import React, { FC } from 'react';
-import { colors, ColorsSet, m, Styles, ViewStyleProps } from 'styles';
+import { colors, ColorsSet, m, Styles, ViewStyleProps } from '@styles';
 
 interface Props extends ViewStyleProps {
   route: TransportRoute;

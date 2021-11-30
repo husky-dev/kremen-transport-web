@@ -1,6 +1,6 @@
 import { isArray, isNumber } from 'lodash';
 import React, { FC } from 'react';
-import { m, MergeStyleVal, px, Style } from 'styles';
+import { m, MergeStyleVal, px, Style } from '@styles';
 
 interface Props {
   className?: string;

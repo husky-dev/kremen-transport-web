@@ -1,9 +1,9 @@
 import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
-import ServicesIcon from 'components/Services/Icon';
-import { View } from 'components/Common';
-import { Service } from 'core/services';
+import ServicesIcon from '@components/Services/Icon';
+import { View } from '@components/Common';
+import { Service } from '@core/services';
 import React, { FC } from 'react';
-import { m, Styles, ViewStyleProps } from 'styles';
+import { m, Styles, ViewStyleProps } from '@styles';
 
 interface Props extends ViewStyleProps {
   item: Service;

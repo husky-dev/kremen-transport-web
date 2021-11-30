@@ -1,6 +1,6 @@
-import { View } from 'components/Common';
+import { View } from '@components/Common';
 import React, { FC } from 'react';
-import { colors, ViewStyleProps } from 'styles';
+import { colors, ViewStyleProps } from '@styles';
 
 interface Props extends ViewStyleProps {
   name: string;

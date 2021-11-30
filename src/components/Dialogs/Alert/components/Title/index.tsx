@@ -4,7 +4,7 @@ import { createStyles, Theme, WithStyles, withStyles } from '@material-ui/core/s
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import React, { FC } from 'react';
-import { ViewStyleProps } from 'styles';
+import { ViewStyleProps } from '@styles';
 
 interface Props extends WithStyles<typeof styles>, ViewStyleProps {
   onClose?: () => void;

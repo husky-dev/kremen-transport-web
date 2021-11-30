@@ -1,11 +1,10 @@
-import { Log } from 'utils';
 import mixpanel, { Dict } from 'mixpanel-browser';
-import { genId } from 'utils';
+import { genId, isStrOrUndef, Log } from '@utils';
 
-import { getConf, setConf } from './configs';
 import getUserLocale, { getUserLocales } from './locales';
+import { getStorageParam } from './storage';
 
-const log = Log('core.analytics');
+const log = Log('@core.analytics');
 
 const enabled = APP_ENV !== 'dev';
 // const enabled = true;
@@ -14,13 +13,15 @@ mixpanel.init('8133cb5ad59bba7d4dff11d715b39147');
 
 // User
 
+const uidStorage = getStorageParam('uid', isStrOrUndef);
+
 const getUID = (): string => {
-  const storedUid = getConf<string>('uid');
+  const storedUid = uidStorage.get();
   if (storedUid) {
     return storedUid;
   }
   const newUid = genId();
-  setConf('uid', newUid);
+  uidStorage.set(newUid);
   return newUid;
 };
 

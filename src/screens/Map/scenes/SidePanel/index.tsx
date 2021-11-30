@@ -2,14 +2,14 @@ import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
 import IconEdit from '@material-ui/icons/KeyboardArrowDown';
 import IconClose from '@material-ui/icons/KeyboardArrowUp';
-import { Collapse } from 'components/Common';
-import View from 'components/Common/View';
-import { RouteCircle } from 'components/Transport';
-import { sortRoutes, track } from 'core';
-import { TransportBus, TransportRoute } from 'core/api';
+import { Collapse } from '@components/Common';
+import View from '@components/Common/View';
+import { RouteCircle } from '@components/Transport';
+import { sortRoutes, track } from '@core';
+import { TransportBus, TransportRoute } from '@core/api';
 import { compact, groupBy } from 'lodash';
 import React, { FC, useState } from 'react';
-import { colors, m, Styles, ViewStyleProps } from 'styles';
+import { colors, m, Styles, ViewStyleProps } from '@styles';
 
 import RouteSelectGroup from './components/RouteSelectGroup';
 

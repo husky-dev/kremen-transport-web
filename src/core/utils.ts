@@ -1,6 +1,6 @@
-import { TransportRoute } from 'core/api';
+import { TransportRoute } from '@core/api';
 import { sortBy } from 'lodash';
-import { colors, colorSetFromColor } from 'styles';
+import { colors, colorSetFromColor } from '@styles';
 
 const defRouteColors = colorSetFromColor(colors.back);
 

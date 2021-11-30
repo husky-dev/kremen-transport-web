@@ -1,11 +1,12 @@
 /* eslint-disable max-len */
-import { TransportRoute, TransportStation } from 'core/api';
+import { TransportRoute, TransportStation } from '@core/api';
 import React, { FC, useMemo } from 'react';
 import { Marker } from 'react-google-maps';
 
 import StationPopup from './components/StationPopup';
 
 interface Props {
+  routes: TransportRoute[];
   station: TransportStation;
   popupOpen?: boolean;
   size?: number;
@@ -37,6 +38,7 @@ export const StationMarker: FC<Props> = ({
   popupOpen,
   route,
   size = 12,
+  routes,
   selectedRoutes,
   onPopupClose,
 }) => {
@@ -64,7 +66,13 @@ export const StationMarker: FC<Props> = ({
         onClick={handleClick}
       >
         {popupOpen && (
-          <StationPopup station={station} route={route} selectedRoutes={selectedRoutes} onClose={handlePopupClose} />
+          <StationPopup
+            station={station}
+            route={route}
+            routes={routes}
+            selectedRoutes={selectedRoutes}
+            onClose={handlePopupClose}
+          />
         )}
       </Marker>
     ),

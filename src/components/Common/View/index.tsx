@@ -1,6 +1,6 @@
 import { isArray } from 'lodash';
 import React, { FC, LegacyRef, MouseEvent, ReactNode, Ref, RefObject } from 'react';
-import { m, MergeStyleVal, Style, Styles } from 'styles';
+import { m, MergeStyleVal, Style, Styles } from '@styles';
 
 interface Props {
   divRef?: Ref<HTMLDivElement> | RefObject<HTMLDivElement> | LegacyRef<HTMLDivElement>;

@@ -1,75 +1,82 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { ControlRoundBtn, DocTitle, View } from 'components/Common';
-import { ServicesAppBar } from 'components/Services';
-import { BusMarker, CurLocMarker, RoutePath, StationMarker } from 'components/Transport';
-import {
-  coordinates,
-  defRoutePathColors,
-  findRouteWithId,
-  getConf,
-  removeConf,
-  routeIdToColor,
-  routeToColor,
-  setConf,
-  track,
-} from 'core';
-import { TransportBus, TransportRoute, TransportStation } from 'core/api';
-import { useWebScockets } from 'core/ws';
-import { includes, uniqBy } from 'lodash';
-import React, { FC, useEffect, useRef, useState, lazy, Suspense } from 'react';
+import { ControlRoundBtn, DocTitle, View } from '@components/Common';
+import Map from '@components/Geo/Map';
+import { ServicesAppBar } from '@components/Services';
+import { BusMarker, CurLocMarker, RoutePath, StationMarker } from '@components/Transport';
+import { coordinates, defRoutePathColors, findRouteWithId, routeIdToColor, routeToColor, track } from '@core';
+import { api, TransportBus, TransportRoute, TransportStation } from '@core/api';
+import { isTransportBusArrOrUndef, isTransportRouteArrOrUndef } from '@core/api/utils';
+import { getStorageParam } from '@core/storage';
+import { useWebScockets } from '@core/ws';
+import { includes } from 'lodash';
+import React, { FC, Suspense, useEffect, useRef, useState } from 'react';
 import { GoogleMap } from 'react-google-maps';
-import { useSelector, useStoreManager } from 'store';
-import { fullScreen, m, Styles, ViewStyleProps } from 'styles';
-import { LatLng, Log } from 'utils';
+import { fullScreen, m, Styles, ViewStyleProps } from '@styles';
+import { errToStr, isLatLngOrUndef, isNumArrOrUndef, isNumOrUndef, LatLng, Log } from '@utils';
 
 import { SidePanel } from './scenes/SidePanel';
-import { getMapZoomConf, getSelectedRoutesConf, setMapZoomConf, setSelectedRoutesConf } from './utils';
+import { routesToStatiosn } from './utils';
 
-const Map = lazy(() => import('components/Geo/Map'));
-
-const log = Log('screens.MapScreen');
-
-const routesToStatiosn = (routes: TransportRoute[]): TransportStation[] => {
-  const stations: TransportStation[] = [];
-  routes.forEach(route => {
-    stations.push(...route.stations);
-  });
-  return uniqBy(stations, station => station.sid);
-};
+const log = Log('@screens.Map');
 
 type Props = ViewStyleProps;
 
 const mapMarkerSize = 46;
 const stationMarkerSize = Math.round(mapMarkerSize / 2.7);
 
+const busesStorage = getStorageParam('buses', isTransportBusArrOrUndef);
+const routesStorage = getStorageParam('routes', isTransportRouteArrOrUndef);
+const selectedStorage = getStorageParam('selected', isNumArrOrUndef);
+const zoomStorage = getStorageParam('zoom', isNumOrUndef);
+const curPositionStorage = getStorageParam('curPosition', isLatLngOrUndef);
+
 export const MapScreen: FC<Props> = ({ style }) => {
   const mapRef = useRef<GoogleMap>(null);
 
-  const manager = useStoreManager();
-  const allRoutes = useSelector(s => s.transport.routes);
-  const allBuses = useSelector(s => s.transport.buses);
+  const [allRoutes, setAllRoutes] = useState<TransportRoute[]>(routesStorage.get() || []);
+  const [allBuses, setAllBuses] = useState<TransportBus[]>(busesStorage.get() || []);
 
   const [center, setCenter] = useState<LatLng>(coordinates.kremen);
-  const [zoom, setZoom] = useState<number>(getMapZoomConf(14));
+  const [zoom, setZoom] = useState<number>(zoomStorage.get() || 14);
   const [selectedBus, setSelectedBus] = useState<TransportBus | undefined>(undefined);
   const [stationPopupId, setStationPopupId] = useState<number | undefined>(undefined);
   const [displayedRoutes, setDisplayedRoutes] = useState<number[]>(
-    getSelectedRoutesConf([189, 188, 192, 187, 190, 191]),
+    selectedStorage.get() || [189, 188, 192, 187, 190, 191],
   );
 
   useEffect(() => {
     track('MapScreenVisit');
-    manager.updateCommonData();
+    updateData();
   }, []);
 
   useWebScockets({
     onMessage: msg => {
       if (msg.type === 'buses') {
         log.debug('ws buses update');
-        manager.modBuses(msg.data);
+        const curBuses = busesStorage.get();
+        if (!curBuses) return;
+        const newBuses = curBuses.map(itm => {
+          const update = msg.data.find(uitem => uitem.tid === itm.tid);
+          return update ? { ...itm, ...update } : itm;
+        });
+        setAllBuses(newBuses);
+        busesStorage.set(newBuses);
       }
     },
   });
+
+  const updateData = async () => {
+    try {
+      log.debug('updating data');
+      const [routes, buses] = await Promise.all([api.transport.routes(), api.transport.buses()]);
+      log.debug('updating data done', { routes, buses });
+      setAllRoutes(routes);
+      routesStorage.set(routes);
+      setAllBuses(buses);
+      busesStorage.set(buses);
+    } catch (err: unknown) {
+      log.err('updating data err', { err: errToStr(err) });
+    }
+  };
 
   // Map
 
@@ -82,7 +89,7 @@ export const MapScreen: FC<Props> = ({ style }) => {
       return;
     }
     log.debug(`zoom changed: ${zoom}`);
-    setMapZoomConf(zoom);
+    zoomStorage.set(zoom);
   };
 
   const handleMapCenterChanged = () => {
@@ -124,12 +131,12 @@ export const MapScreen: FC<Props> = ({ style }) => {
       newVal = 22;
     }
     setZoom(newVal);
-    setMapZoomConf(newVal);
+    zoomStorage.set(newVal);
   };
 
   // Cur location
 
-  const [curPosition, setCurPosition] = useState<LatLng | undefined>(getConf('curPosition'));
+  const [curPosition, setCurPosition] = useState<LatLng | undefined>(curPositionStorage.get());
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -137,22 +144,22 @@ export const MapScreen: FC<Props> = ({ style }) => {
       navigator.geolocation.getCurrentPosition(handlePositionReceived, handlePositionErr);
     } else {
       log.info('geolocation not enabled on this device');
-      removeConf('curPosition');
+      curPositionStorage.remove();
       setCurPosition(undefined);
     }
   }, []);
 
-  const handlePositionErr = (err: PositionError) => {
+  const handlePositionErr = (err: GeolocationPositionError) => {
     if (err.code === 1) {
       log.info('user denied geolocation prompt');
-      removeConf('curPosition');
+      curPositionStorage.remove();
       setCurPosition(undefined);
     } else {
       log.err(err.message);
     }
   };
 
-  const handlePositionReceived = (rawVal: Position) => {
+  const handlePositionReceived = (rawVal: GeolocationPosition) => {
     log.debug('cur position firts received');
     const { latitude: lat, longitude: lng } = rawVal.coords;
     setCenter({ lat, lng });
@@ -160,10 +167,10 @@ export const MapScreen: FC<Props> = ({ style }) => {
     navigator.geolocation.watchPosition(handlePositionUpdated);
   };
 
-  const handlePositionUpdated = (rawVal: Position) => {
+  const handlePositionUpdated = (rawVal: GeolocationPosition) => {
     log.debug('cur poisition changed');
     const val = { lat: rawVal.coords.latitude, lng: rawVal.coords.longitude };
-    setConf('curPosition', val);
+    curPositionStorage.set(val);
     setCurPosition(val);
   };
 
@@ -204,8 +211,8 @@ export const MapScreen: FC<Props> = ({ style }) => {
 
   const handleDisplayedRoutesChange = (val: number[]) => {
     track('DisplayedRoutesChange', { routes: val });
-    setSelectedRoutesConf(val);
     setDisplayedRoutes(val);
+    selectedStorage.set(val);
   };
 
   // Render
@@ -295,6 +302,7 @@ export const MapScreen: FC<Props> = ({ style }) => {
             <StationMarker
               key={`station-${station.rid}-${station.sid}`}
               station={station}
+              routes={allRoutes}
               selectedRoutes={displayedRoutes}
               size={stationMarkerSize}
               route={findRouteWithId(allRoutes, station.rid)}

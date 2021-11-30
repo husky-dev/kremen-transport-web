@@ -1,29 +1,10 @@
-import { getConf, setConf } from 'core';
-import { LatLng } from 'utils';
+import { TransportRoute, TransportStation } from '@core';
+import { uniqBy } from 'lodash';
 
-export const getSelectedRoutesConf = (def: number[]): number[] => {
-  const val = getConf<number[]>('routes');
-  return val || def;
-};
-
-export const setSelectedRoutesConf = (val: number[]) => {
-  setConf('routes', val);
-};
-
-export const getMapCenterConf = (defVal: LatLng): LatLng => {
-  const rawVal = getConf('center');
-  return rawVal || defVal;
-};
-
-export const setMapCenterConf = (val: LatLng) => {
-  setConf('center', val);
-};
-
-export const getMapZoomConf = (defVal: number): number => {
-  const rawVal = getConf('zoom');
-  return rawVal || defVal;
-};
-
-export const setMapZoomConf = (val: number) => {
-  setConf('zoom', val);
+export const routesToStatiosn = (routes: TransportRoute[]): TransportStation[] => {
+  const stations: TransportStation[] = [];
+  routes.forEach(route => {
+    stations.push(...route.stations);
+  });
+  return uniqBy(stations, station => station.sid);
 };

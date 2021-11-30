@@ -1,9 +1,9 @@
-import { View } from 'components/Common';
-import { RouteCircle } from 'components/Transport';
-import { TransportBus, TransportRoute } from 'core/api';
+import { View } from '@components/Common';
+import { RouteCircle } from '@components/Transport';
+import { TransportBus, TransportRoute } from '@core/api';
 import React, { FC } from 'react';
 import { InfoWindow } from 'react-google-maps';
-import { m, Styles, ViewStyleProps } from 'styles';
+import { m, Styles, ViewStyleProps } from '@styles';
 
 interface Props extends ViewStyleProps {
   bus: TransportBus;

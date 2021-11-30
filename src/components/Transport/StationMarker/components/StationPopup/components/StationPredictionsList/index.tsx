@@ -1,24 +1,22 @@
-import { View } from 'components/Common';
-import { RouteCircle } from 'components/Transport';
-import { findRouteWithId } from 'core';
-import { TransportPrediction, TransportStation } from 'core/api';
+import { View } from '@components/Common';
+import { RouteCircle } from '@components/Transport';
+import { findRouteWithId, TransportRoute } from '@core';
+import { TransportPrediction, TransportStation } from '@core/api';
 import { sortBy } from 'lodash';
 import React, { FC } from 'react';
-import { useSelector } from 'store';
-import { m, Styles, ViewStyleProps } from 'styles';
+import { m, Styles, ViewStyleProps } from '@styles';
 
 import { getItemsSplitByColumns, numToTimeStr } from './utils';
 
 interface Props extends ViewStyleProps {
+  routes: TransportRoute[];
   station: TransportStation;
   predictions: TransportPrediction[];
 }
 
-const StationPredictionsTwoColumn: FC<Props> = ({ style, predictions: predictionsRaw, station }) => {
+const StationPredictionsTwoColumn: FC<Props> = ({ style, predictions: predictionsRaw, station, routes }) => {
   const stationPrediction = predictionsRaw.filter(item => item.reverse !== station.directionForward);
   const predictions = sortBy(stationPrediction, item => item.prediction);
-
-  const routes = useSelector(s => s.transport.routes);
 
   const renderPrediction = (item: TransportPrediction, index: number) => {
     const route = findRouteWithId(routes, item.rid);

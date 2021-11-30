@@ -4,7 +4,7 @@ import MuiDialogActions from '@material-ui/core/DialogActions';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import { withStyles } from '@material-ui/core/styles';
 import React, { FC } from 'react';
-import { ViewStyleProps } from 'styles';
+import { ViewStyleProps } from '@styles';
 
 import DialogTitle from './components/Title';
 

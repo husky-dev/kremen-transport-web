@@ -1,20 +1,21 @@
 import { CircularProgress } from '@material-ui/core';
 import IconArrowDownward from '@material-ui/icons/ArrowDownward';
 import IconArrowUpward from '@material-ui/icons/ArrowUpward';
-import { Text, View } from 'components/Common';
-import { RouteCircle } from 'components/Transport';
-import { api } from 'core';
-import { TransportPrediction, TransportRoute, TransportStation } from 'core/api';
+import { Text, View } from '@components/Common';
+import { RouteCircle } from '@components/Transport';
+import { api } from '@core';
+import { TransportPrediction, TransportRoute, TransportStation } from '@core/api';
 import React, { FC, useEffect, useState } from 'react';
 import { InfoWindow } from 'react-google-maps';
-import { colors, m, Styles, ViewStyleProps } from 'styles';
-import { Log, Timer } from 'utils';
+import { colors, m, Styles, ViewStyleProps } from '@styles';
+import { Log, Timer } from '@utils';
 
 import StationPredictionsList from './components/StationPredictionsList';
 
-const log = Log('components.StationPopup');
+const log = Log('@components.StationPopup');
 
 interface Props extends ViewStyleProps {
+  routes: TransportRoute[];
   station: TransportStation;
   route?: TransportRoute;
   selectedRoutes: number[];
@@ -54,7 +55,7 @@ const usePredictions = (sid: number) => {
   return { predictions, processing, err };
 };
 
-const StationPopup: FC<Props> = ({ style, station, route, onClose }) => {
+const StationPopup: FC<Props> = ({ style, station, route, routes, onClose }) => {
   const { predictions, processing, err } = usePredictions(station.sid);
   const title = station.name;
   return (
@@ -77,7 +78,12 @@ const StationPopup: FC<Props> = ({ style, station, route, onClose }) => {
           </View>
         )}
         {!!predictions.length && (
-          <StationPredictionsList style={styles.predictions} predictions={predictions} station={station} />
+          <StationPredictionsList
+            style={styles.predictions}
+            routes={routes}
+            predictions={predictions}
+            station={station}
+          />
         )}
         {!!err && (
           <View style={styles.err}>

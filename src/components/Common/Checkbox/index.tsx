@@ -1,5 +1,5 @@
 import React, { FC, SyntheticEvent } from 'react';
-import { colors, m, Styles, ViewStyleProps } from 'styles';
+import { colors, m, Styles, ViewStyleProps } from '@styles';
 
 import View from '../View';
 

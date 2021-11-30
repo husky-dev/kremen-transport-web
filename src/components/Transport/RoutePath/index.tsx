@@ -1,7 +1,7 @@
 import React, { FC, useMemo } from 'react';
 import { Polyline } from 'react-google-maps';
-import { ColorsSet } from 'styles';
-import { TransportRoute } from 'core/api';
+import { ColorsSet } from '@styles';
+import { TransportRoute } from '@core/api';
 
 interface Props {
   route: TransportRoute;

@@ -1,10 +1,10 @@
-import { TransportBus, TransportPrediction, TransportRoute } from '@kremen/types';
+import { TransportBus, TransportPrediction, TransportRoute } from './types';
 import axios from 'axios';
-import { genRandId, Log } from 'utils';
+import { genRandId, Log } from '@utils';
 
 import { ApiReqOpt, getErrFromResp } from './utils';
 
-const log = Log('core.api');
+const log = Log('@core.api');
 
 export const getApiRoot = () => {
   switch (APP_ENV) {
@@ -55,4 +55,4 @@ const getApi = () => {
 
 export const api = getApi();
 
-export * from '@kremen/types';
+export * from './types';

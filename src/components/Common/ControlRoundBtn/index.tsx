@@ -1,6 +1,6 @@
 import { Fab } from '@material-ui/core';
 import React, { FC } from 'react';
-import { ViewStyleProps } from 'styles';
+import { ViewStyleProps } from '@styles';
 import MyLocationIcon from '@material-ui/icons/MyLocation';
 import PlusIcon from '@material-ui/icons/Add';
 import MinusIcon from '@material-ui/icons/Remove';

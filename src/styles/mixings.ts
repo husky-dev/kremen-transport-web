@@ -1,4 +1,4 @@
-import { Style } from 'styles';
+import { Style } from '@styles';
 
 export const fullScreen: Style = {
   bottom: 0,

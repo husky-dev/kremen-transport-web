@@ -1,10 +1,10 @@
 import { List, Popover, Typography } from '@material-ui/core';
 import IconDown from '@material-ui/icons/KeyboardArrowDown';
 import IconUp from '@material-ui/icons/KeyboardArrowUp';
-import { View } from 'components/Common';
-import { defServices, serviceIdToTitle } from 'core/services';
+import { View } from '@components/Common';
+import { defServices, serviceIdToTitle } from '@core/services';
 import React, { FC, MouseEvent, useState } from 'react';
-import { Styles, ViewStyleProps } from 'styles';
+import { Styles, ViewStyleProps } from '@styles';
 
 import ServiceListItem from './components/ListItem';
 

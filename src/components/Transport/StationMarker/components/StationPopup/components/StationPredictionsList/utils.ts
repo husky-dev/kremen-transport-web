@@ -1,4 +1,4 @@
-import { TransportPrediction } from 'core/api';
+import { TransportPrediction } from '@core/api';
 
 export const numToTimeStr = (val: number): { numStr: string; metric: string } => {
   if (val < 60) {
