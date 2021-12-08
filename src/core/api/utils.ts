@@ -1,4 +1,4 @@
-import { isArr, isNull, isNum, isStr, isUndef, isUnknownDict } from '@utils';
+import { isArr, isNum, isStr, isUndef, isUnknownDict } from '@utils';
 
 import { TransportBus, TransportRoute } from './types';
 

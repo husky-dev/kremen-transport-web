@@ -1,15 +1,15 @@
+import { Collapse } from '@components/Common';
+import View from '@components/Common/View';
+import { RouteCircle } from '@components/Transport';
+import { config, sortRoutes, track } from '@core';
+import { TransportBus, TransportRoute } from '@core/api';
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
 import IconEdit from '@material-ui/icons/KeyboardArrowDown';
 import IconClose from '@material-ui/icons/KeyboardArrowUp';
-import { Collapse } from '@components/Common';
-import View from '@components/Common/View';
-import { RouteCircle } from '@components/Transport';
-import { sortRoutes, track } from '@core';
-import { TransportBus, TransportRoute } from '@core/api';
+import { colors, m, Styles, ViewStyleProps } from '@styles';
 import { compact, groupBy } from 'lodash';
 import React, { FC, useState } from 'react';
-import { colors, m, Styles, ViewStyleProps } from '@styles';
 
 import RouteSelectGroup from './components/RouteSelectGroup';
 
@@ -51,7 +51,7 @@ export const SidePanel: FC<Props> = ({ style, routes, buses, selected, onSelecte
         <View style={styles.footer} row={true} justifyContent="space-between">
           <View style={m(styles.footerItem, styles.total)}>{`Всього: ${buses.length}`}</View>
           <View style={styles.footerItem}>{`Активно: ${buses.filter(item => !item.offline).length}`}</View>
-          <View style={m(styles.footerItem, styles.version)}>{`v${APP_VERSION}`}</View>
+          <View style={m(styles.footerItem, styles.version)}>{`v${config.version}`}</View>
         </View>
       </Collapse>
     </Paper>

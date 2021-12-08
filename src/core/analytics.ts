@@ -1,15 +1,17 @@
 import mixpanel, { Dict } from 'mixpanel-browser';
-import { genId, isStrOrUndef, Log } from '@utils';
+import { genId, isStrOrUndef } from '@utils';
 
 import getUserLocale, { getUserLocales } from './locales';
 import { getStorageParam } from './storage';
+import { config } from './config';
+import { Log } from './log';
 
-const log = Log('@core.analytics');
+const log = Log('core.analytics');
 
-const enabled = APP_ENV !== 'dev';
+const enabled = config.env !== 'development';
 // const enabled = true;
 
-mixpanel.init('8133cb5ad59bba7d4dff11d715b39147');
+mixpanel.init(config.mixpanel.token);
 
 // User
 
@@ -40,8 +42,8 @@ const initUser = () => {
   const locales = getUserLocales();
   log.debug('locale=', locale, ', locales=', locales);
   mixpanel.people.set({
-    version: APP_VERSION,
-    env: APP_ENV,
+    version: config.version,
+    env: config.env,
     locale,
     locales,
   });

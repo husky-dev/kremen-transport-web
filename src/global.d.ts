@@ -35,6 +35,7 @@ declare const APP_TITLE: string | undefined;
 declare const APP_COMPANY: string | undefined;
 declare const APP_DESCRIPTION: string | undefined;
 declare const APP_URL: string | undefined;
+declare const SENTRY_DSN: string | undefined;
 
 interface Navigator {
   userLanguage?: string;

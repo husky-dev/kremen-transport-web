@@ -9,6 +9,7 @@ import aboutFooterContent from './assets/aboutFooter.md';
 import { track } from '@core/analytics';
 import React, { FC, useState } from 'react';
 import { colors, Styles, useTheme } from '@styles';
+import { config } from '@core';
 
 export const ServicesAppBar: FC = () => {
   const [aboutVisible, setAboutVisible] = useState<boolean>(false);
@@ -24,14 +25,9 @@ export const ServicesAppBar: FC = () => {
     <>
       <AppBar position="static" style={styles.container}>
         <Toolbar style={styles.toolbar}>
-          <ServicesIcon
-            style={styles.icon}
-            name={APP_NAME || ''}
-            size={24}
-            color={theme.palette.primary.contrastText}
-          />
+          <ServicesIcon style={styles.icon} name={config.name} size={24} color={theme.palette.primary.contrastText} />
           <View style={styles.titleWrap} row={true} alignItems="center">
-            <ServicesDropdown current={APP_NAME || ''} />
+            <ServicesDropdown current={config.name} />
           </View>
           <IconButton color="inherit" onClick={handleAboutPress}>
             <HelpIcon />

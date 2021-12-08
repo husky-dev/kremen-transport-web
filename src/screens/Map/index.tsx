@@ -2,21 +2,31 @@ import { ControlRoundBtn, DocTitle, View } from '@components/Common';
 import Map from '@components/Geo/Map';
 import { ServicesAppBar } from '@components/Services';
 import { BusMarker, CurLocMarker, RoutePath, StationMarker } from '@components/Transport';
-import { coordinates, defRoutePathColors, findRouteWithId, routeIdToColor, routeToColor, track } from '@core';
+import {
+  config,
+  coordinates,
+  defRoutePathColors,
+  findRouteWithId,
+  Log,
+  routeIdToColor,
+  routeToColor,
+  track,
+} from '@core';
 import { api, TransportBus, TransportRoute, TransportStation } from '@core/api';
 import { isTransportBusArrOrUndef, isTransportRouteArrOrUndef } from '@core/api/utils';
 import { getStorageParam } from '@core/storage';
 import { useWebScockets } from '@core/ws';
+import { fullScreen, m, Styles, ViewStyleProps } from '@styles';
+import { errToStr, isLatLngOrUndef, isNumArrOrUndef, isNumOrUndef, LatLng } from '@utils';
 import { includes } from 'lodash';
 import React, { FC, Suspense, useEffect, useRef, useState } from 'react';
 import { GoogleMap } from 'react-google-maps';
-import { fullScreen, m, Styles, ViewStyleProps } from '@styles';
-import { errToStr, isLatLngOrUndef, isNumArrOrUndef, isNumOrUndef, LatLng, Log } from '@utils';
+import * as Sentry from '@sentry/react';
 
 import { SidePanel } from './scenes/SidePanel';
 import { routesToStatiosn } from './utils';
 
-const log = Log('@screens.Map');
+const log = Log('screens.Map');
 
 type Props = ViewStyleProps;
 
@@ -111,6 +121,7 @@ export const MapScreen: FC<Props> = ({ style }) => {
   };
 
   const handleZoomInPress = () => {
+    Sentry.captureMessage('Test error');
     if (mapRef.current) {
       setZoomAndSave(mapRef.current.getZoom() + 1);
     }
@@ -281,7 +292,7 @@ export const MapScreen: FC<Props> = ({ style }) => {
 
   return (
     <View style={m(styles.container, style)}>
-      <DocTitle title={APP_TITLE} />
+      <DocTitle title={config.title} />
       <ServicesAppBar />
       <Suspense fallback={() => null}>
         <Map

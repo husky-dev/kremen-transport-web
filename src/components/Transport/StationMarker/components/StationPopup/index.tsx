@@ -1,18 +1,18 @@
+import { Text, View } from '@components/Common';
+import { RouteCircle } from '@components/Transport';
+import { api, Log } from '@core';
+import { TransportPrediction, TransportRoute, TransportStation } from '@core/api';
 import { CircularProgress } from '@material-ui/core';
 import IconArrowDownward from '@material-ui/icons/ArrowDownward';
 import IconArrowUpward from '@material-ui/icons/ArrowUpward';
-import { Text, View } from '@components/Common';
-import { RouteCircle } from '@components/Transport';
-import { api } from '@core';
-import { TransportPrediction, TransportRoute, TransportStation } from '@core/api';
+import { colors, m, Styles, ViewStyleProps } from '@styles';
+import { Timer } from '@utils';
 import React, { FC, useEffect, useState } from 'react';
 import { InfoWindow } from 'react-google-maps';
-import { colors, m, Styles, ViewStyleProps } from '@styles';
-import { Log, Timer } from '@utils';
 
 import StationPredictionsList from './components/StationPredictionsList';
 
-const log = Log('@components.StationPopup');
+const log = Log('components.StationPopup');
 
 interface Props extends ViewStyleProps {
   routes: TransportRoute[];

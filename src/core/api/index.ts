@@ -1,39 +1,26 @@
-import { TransportBus, TransportPrediction, TransportRoute } from './types';
+import { genRandId } from '@utils';
 import axios from 'axios';
-import { genRandId, Log } from '@utils';
+import { Log } from '@core/log';
 
+import { TransportBus, TransportPrediction, TransportRoute } from './types';
 import { ApiReqOpt, getErrFromResp } from './utils';
 
-const log = Log('@core.api');
+const log = Log('core.api');
 
-export const getApiRoot = () => {
-  switch (APP_ENV) {
-    case 'loc':
-      return {
-        api: 'http://localhost:8080',
-        ws: 'ws://localhost:8080',
-      };
-    default:
-      return {
-        api: 'https://api.kremen.dev',
-        ws: 'wss://api.kremen.dev',
-      };
-  }
-};
+export const getApiRoot = () => ({
+  api: 'https://api.kremen.dev',
+  ws: 'wss://api.kremen.dev',
+});
 
 const getApi = () => {
-  const apiRoot = getApiRoot().api;
+  const apiRoot = getApiRoot();
 
   const apiReq = async <T>(opt: ApiReqOpt): Promise<T> => {
     const { path, method = 'get', params } = opt;
-    const reqUrl = `${apiRoot}/${path}`;
-    const id = genRandId(5);
-    const msg = `req id=${id}, method=${method}, path=${path}, params=${JSON.stringify(params)}`;
-    log.debug(msg);
-    log.start(msg);
+    const reqUrl = `${apiRoot.api}/${path}`;
+    log.debug('api req', { url: reqUrl, params });
     const resp = await axios({ method, url: reqUrl, params });
-    log.end(msg);
-    log.debug(`${msg} done`);
+    log.debug(`api req done`);
     const { status } = resp;
     const data = (resp.data as unknown) as T;
     const err = getErrFromResp(status, data);

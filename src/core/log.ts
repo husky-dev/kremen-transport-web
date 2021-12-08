@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+import { config } from './config';
 import { isDate, isNumber, isString, reduce } from 'lodash';
 
 export enum LogLevel {
@@ -33,17 +34,9 @@ const on = (name: LogEventName, handler: LogEventHandler) => {
   handlers.push({ name, handler });
 };
 
-let enabled: boolean = true;
-let colorized: boolean = false;
+const enabled: boolean = config.env !== 'production';
+const colorized: boolean = false;
 const minLevel: LogLevel = LogLevel.Debug;
-
-export const setLogEnabled = (val: boolean) => {
-  enabled = val;
-};
-
-export const setLogColorized = (val: boolean) => {
-  colorized = val;
-};
 
 export const logLevelToSymbol = (level: LogLevel) => {
   switch (level) {

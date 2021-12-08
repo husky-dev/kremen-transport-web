@@ -1,3 +1,4 @@
+import { config } from '@core/config';
 import { FC, useEffect } from 'react';
 
 interface Props {
@@ -6,7 +7,7 @@ interface Props {
 
 export const DocTitle: FC<Props> = ({ title }) => {
   useEffect(() => {
-    document.title = title ? `${title} | ${APP_COMPANY}` : `${APP_TITLE} | ${APP_COMPANY}`;
+    document.title = title ? `${title} | ${config.title}` : `${config.title} | ${config.company}`;
   });
   return null;
 };

@@ -1,6 +1,7 @@
-import { errToStr, isStr, Log, TypeGuard } from '@utils';
+import { errToStr, isStr, TypeGuard } from '@utils';
+import { Log } from './log';
 
-const log = Log('@core.storage');
+const log = Log('core.storage');
 
 export const getStorageParam = <T = unknown>(key: string, guard?: TypeGuard<T>) => {
   const fullKey = `kremen:transport:${key}`;

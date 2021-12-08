@@ -161,8 +161,8 @@ const run = async () => {
   const buildOptions = {
     entryPoints: [entryFilePath],
     bundle: true,
-    sourcemap: env !== 'prd',
-    minify: env === 'prd',
+    sourcemap: env !== 'production',
+    minify: env === 'production',
     outfile: bundleFilePath,
     watch: conf.watch,
     loader: {
@@ -181,6 +181,7 @@ const run = async () => {
       APP_URL: JSON.stringify(process.env.APP_URL || '/'),
       APP_LOG_LEVEL: JSON.stringify(process.env.APP_LOG_LEVEL),
       MAPS_API_KEY: JSON.stringify(process.env.MAPS_API_KEY),
+      SENTRY_DSN: JSON.stringify(process.env.SENTRY_DSN),
       global: 'window',
     },
   };

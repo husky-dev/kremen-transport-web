@@ -1,7 +1,8 @@
 import { isString } from 'lodash';
 import { useEffect, useState } from 'react';
-import { isUnknownDict, Log } from '@utils';
+import { isUnknownDict } from '@utils';
 import { getApiRoot, TransportBus } from './api';
+import { Log } from './log';
 
 const log = Log('ws');
 
