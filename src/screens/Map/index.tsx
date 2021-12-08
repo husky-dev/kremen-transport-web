@@ -21,7 +21,6 @@ import { errToStr, isLatLngOrUndef, isNumArrOrUndef, isNumOrUndef, LatLng } from
 import { includes } from 'lodash';
 import React, { FC, Suspense, useEffect, useRef, useState } from 'react';
 import { GoogleMap } from 'react-google-maps';
-import * as Sentry from '@sentry/react';
 
 import { SidePanel } from './scenes/SidePanel';
 import { routesToStatiosn } from './utils';
@@ -121,7 +120,6 @@ export const MapScreen: FC<Props> = ({ style }) => {
   };
 
   const handleZoomInPress = () => {
-    Sentry.captureMessage('Test error');
     if (mapRef.current) {
       setZoomAndSave(mapRef.current.getZoom() + 1);
     }
