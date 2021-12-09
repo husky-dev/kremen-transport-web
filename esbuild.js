@@ -201,6 +201,7 @@ const run = async () => {
     log.info(`start serving at http://localhost:${servePort}/`);
     serve(distPath, servePort, buildOptions);
     if (conf.open) {
+      log.info(`opening http://localhost:${servePort}/ at browser`);
       openUrl(`http://localhost:${servePort}/`);
     }
   } else {
