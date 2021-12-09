@@ -39,7 +39,7 @@ const openUrl = url => {
 // Configs
 
 const getEnvConfigs = () => {
-  const opts = { watch: false, serve: false };
+  const opts = { watch: false, serve: false, sourcemap: false };
   const args = process.argv.slice(2, process.argv.length);
   for (const arg of args) {
     if (arg === '--watch' || arg === '-w') {
@@ -47,6 +47,9 @@ const getEnvConfigs = () => {
     }
     if (arg === '--serve') {
       opts.serve = true;
+    }
+    if (arg === '--sourcemap') {
+      opts.sourcemap = true;
     }
   }
   return opts;
@@ -161,7 +164,7 @@ const run = async () => {
   const buildOptions = {
     entryPoints: [entryFilePath],
     bundle: true,
-    sourcemap: env !== 'production',
+    sourcemap: env !== 'production' || conf.sourcemap,
     minify: env === 'production',
     outfile: bundleFilePath,
     watch: conf.watch,
