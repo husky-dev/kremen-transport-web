@@ -1,9 +1,9 @@
 {
   "name": "@kremen/transport-web",
   "version": "0.0.29",
-  "title": "Громадський транспорт",
+  "title": "Громадський транспорт Кременчука",
   "company": "#Kremen.Dev",
-  "description": "Карта руху громадського транспорту",
+  "description": "Карта руху громадського транспорту Кременчука",
   "url": "https://transport.kremen.dev",
   "main": "src/index.tsx",
   "author": "Jaroslav Khorishchenko <websnipter@gmail.com>",
