@@ -1,6 +1,5 @@
-import { genRandId } from '@utils';
-import axios from 'axios';
 import { Log } from '@core/log';
+import axios from 'axios';
 
 import { TransportBus, TransportPrediction, TransportRoute } from './types';
 import { ApiReqOpt, getErrFromResp } from './utils';
@@ -22,7 +21,7 @@ const getApi = () => {
     const resp = await axios({ method, url: reqUrl, params });
     log.debug(`api req done`);
     const { status } = resp;
-    const data = (resp.data as unknown) as T;
+    const data = resp.data as unknown as T;
     const err = getErrFromResp(status, data);
     if (err) {
       throw err;

@@ -1,4 +1,4 @@
-export enum NavPath {
-  Root = '/',
-  Privacy = '/privacy',
-}
+export const routes = {
+  index: '/',
+  privacy: '/privacy',
+};

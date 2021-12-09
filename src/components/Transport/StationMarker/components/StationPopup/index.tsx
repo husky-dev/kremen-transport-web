@@ -6,7 +6,7 @@ import { CircularProgress } from '@material-ui/core';
 import IconArrowDownward from '@material-ui/icons/ArrowDownward';
 import IconArrowUpward from '@material-ui/icons/ArrowUpward';
 import { colors, m, Styles, ViewStyleProps } from '@styles';
-import { Timer } from '@utils';
+import { errToStr, Timer } from '@utils';
 import React, { FC, useEffect, useState } from 'react';
 import { InfoWindow } from 'react-google-maps';
 
@@ -36,9 +36,9 @@ const usePredictions = (sid: number) => {
       setErr(null);
       log.debug('getting station prediction done, items=', items);
       setPredictions(items);
-    } catch (catchErr) {
+    } catch (err: unknown) {
       setProcessing(false);
-      log.err(catchErr);
+      log.err('getting station prediction', { err: errToStr(err) });
       setErr('Помилка завантаження...');
     }
   };

@@ -10,6 +10,7 @@ export const initSentry = () =>
     release: `${config.name.replace('@kremen/', 'kremen-')}@${config.version}`,
     integrations: [new Integrations.BrowserTracing()],
     tracesSampleRate: 1.0,
+    beforeSend: async event => (config.env === 'production' ? event : null),
   });
 
 type SentryEventLevel = 'info' | 'warning' | 'error';

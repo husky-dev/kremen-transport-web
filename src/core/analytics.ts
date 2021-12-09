@@ -40,7 +40,7 @@ const initUser = () => {
   mixpanel.identify();
   const locale = getUserLocale();
   const locales = getUserLocales();
-  log.debug('locale=', locale, ', locales=', locales);
+  log.debug('locales', { locale, locales });
   mixpanel.people.set({
     version: config.version,
     env: config.env,

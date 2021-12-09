@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 RUN apk add --update --no-cache make g++ python2
 COPY public ./public
 COPY package.json yarn.lock tsconfig.json esbuild.js .env ./
-RUN yarn install
+RUN yarn install --ignore-scripts
 COPY src ./src
 RUN yarn dist
 
