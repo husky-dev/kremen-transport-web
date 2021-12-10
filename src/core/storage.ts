@@ -3,8 +3,10 @@ import { Log } from './log';
 
 const log = Log('core.storage');
 
+const version = 1;
+
 export const getStorageParam = <T = unknown>(key: string, guard?: TypeGuard<T>) => {
-  const fullKey = `kremen:transport:${key}`;
+  const fullKey = `kremen:transport:${version}:${key}`;
 
   const get = (): T | undefined => {
     const valStr = localStorage.getItem(fullKey);
@@ -22,7 +24,7 @@ export const getStorageParam = <T = unknown>(key: string, guard?: TypeGuard<T>) 
         }
       } else {
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-        return (val as unknown) as T;
+        return val as unknown as T;
       }
     } catch (err: unknown) {
       log.err(`getting data err`, { err: errToStr(err) });
