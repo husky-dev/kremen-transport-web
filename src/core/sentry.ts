@@ -7,7 +7,7 @@ export const initSentry = () =>
   Sentry.init({
     dsn: config.sentry.dsn,
     environment: config.env,
-    release: `${config.name.replace('@kremen/', 'kremen-')}@${config.version}`,
+    release: `${config.sentry.project}@${config.version}`,
     integrations: [new Integrations.BrowserTracing()],
     tracesSampleRate: 1.0,
     beforeSend: async event => (config.env === 'production' ? event : null),

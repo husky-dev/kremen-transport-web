@@ -188,6 +188,7 @@ const run = async () => {
       APP_LOG_LEVEL: JSON.stringify(process.env.APP_LOG_LEVEL),
       MAPS_API_KEY: JSON.stringify(process.env.MAPS_API_KEY),
       SENTRY_DSN: JSON.stringify(process.env.SENTRY_DSN),
+      SENTRY_PROJECT: JSON.stringify(process.env.SENTRY_PROJECT),
       global: 'window',
     },
   };
