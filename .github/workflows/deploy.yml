@@ -50,3 +50,27 @@ jobs:
         format: markdown
         message: |
           🏁 *kremen-transport-web:* ${{ env.APP_VERSION }} deployed successfully
+    - name: 'Sentry: install'
+      run: >
+        npm install -g @sentry/cli
+    - name: "Sentry: create release"
+      run: |
+        sentry-cli releases new "$SENTRY_PROJECT@$APP_VERSION"
+    - name: 'Docker: generate sourcemaps'
+      run: |
+        docker build -f Dockerfile.ci -t app-ci:latest .
+        docker run --rm -v "$(pwd)/dist:/usr/src/app/dist" app-ci:latest sh -c "yarn dist --sourcemap"
+    - name: "Sentry: upload sourcemap"
+      run: |
+        sentry-cli releases files "$SENTRY_PROJECT@$APP_VERSION" upload-sourcemaps "$(pwd)/dist"
+    - name: "Sentry: finalize"
+      run: |
+        sentry-cli releases finalize "$SENTRY_PROJECT@$APP_VERSION"
+    - name: 'Notify: sentry sourcemap uploaded'
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_TO }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        format: markdown
+        message: |
+          🏁 *kremen-transport-web:* ${{ env.APP_VERSION }} sourcemap uploaded to Sentry
