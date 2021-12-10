@@ -73,4 +73,4 @@ jobs:
         token: ${{ secrets.TELEGRAM_TOKEN }}
         format: markdown
         message: |
-          🏁 *kremen-transport-web:* ${{ env.APP_VERSION }} sourcemap uploaded to Sentry
+          ⬆️ *kremen-transport-web:* ${{ env.APP_VERSION }} sourcemap uploaded to Sentry
