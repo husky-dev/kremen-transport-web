@@ -160,7 +160,7 @@ export const MapScreen: FC<Props> = ({ style }) => {
   // Bus
 
   const handleBusMarkerClick = (bus: TransportBus) => {
-    log.info('bus marker click, bus=', bus);
+    log.info('bus marker click', { bus });
     track('BusMarkerClick', { tid: bus.tid, rid: bus.rid, name: bus.name });
     setSelectedBus(bus);
     setStationPopupId(undefined);
@@ -171,7 +171,7 @@ export const MapScreen: FC<Props> = ({ style }) => {
   // Station
 
   const handleStationMarkerClick = (station: TransportStation) => {
-    log.info('station marker click, station=', station);
+    log.info('station marker click', { station });
     track('StationMarkerClick', { sid: station.sid, name: station.name });
     setStationPopupId(station.sid);
     setSelectedBus(undefined);

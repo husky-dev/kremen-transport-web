@@ -34,7 +34,7 @@ const usePredictions = (sid: number) => {
       const items = await api.transport.stationPrediction(sid);
       setProcessing(false);
       setErr(null);
-      log.debug('getting station prediction done, items=', items);
+      log.debug('getting station prediction done', { items });
       setPredictions(items);
     } catch (err: unknown) {
       setProcessing(false);

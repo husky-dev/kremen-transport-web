@@ -1,6 +1,6 @@
 import { isString } from 'lodash';
 import { useEffect, useState } from 'react';
-import { isUnknownDict } from '@utils';
+import { errToStr, isUnknownDict } from '@utils';
 import { getApiRoot, TransportBus } from './api';
 import { Log } from './log';
 
@@ -17,7 +17,7 @@ type WsMsg = { type: 'buses'; data: Partial<TransportBus>[] };
 
 const parseMsg = (data: unknown): WsMsg | undefined => {
   if (!isString(data)) {
-    log.err('incoming message is not a string, data=', data);
+    log.err('incoming message is not a string', { data });
     return undefined;
   }
   try {
@@ -35,13 +35,13 @@ const parseMsg = (data: unknown): WsMsg | undefined => {
         log.err('parsed message has type "buses" but "data" field is empty');
         return undefined;
       } else {
-        return { type: 'buses', data: (parsed.data as unknown) as Partial<TransportBus>[] };
+        return { type: 'buses', data: parsed.data as unknown as Partial<TransportBus>[] };
       }
     }
-    log.warn('unknown message type=', parsed.type);
+    log.warn('unknown message', { type: parsed.type });
     return undefined;
   } catch (err) {
-    log.err('parsing income msg err, data=', data);
+    log.err('parsing income msg err', { data });
     return undefined;
   }
 };
@@ -49,7 +49,7 @@ const parseMsg = (data: unknown): WsMsg | undefined => {
 export const useWebScockets = ({ onOpen, onClose, onMessage, onError }: WsOpt = {}) => {
   const getConnection = () => {
     const url = `${getApiRoot().ws}/transport/realtime`;
-    log.info('new connection, url=', url);
+    log.info('new connection', { url });
     const cn = new WebSocket(url);
 
     cn.onopen = () => {
@@ -60,7 +60,7 @@ export const useWebScockets = ({ onOpen, onClose, onMessage, onError }: WsOpt = 
     };
 
     cn.onclose = e => {
-      log.info('on close, reason=', e.reason);
+      log.info('on close', { reason: e.reason });
       setTimeout(() => {
         log.info('reconnecting');
         setConnection(getConnection());
@@ -80,8 +80,8 @@ export const useWebScockets = ({ onOpen, onClose, onMessage, onError }: WsOpt = 
       }
     };
 
-    cn.onerror = err => {
-      log.err('on error err=', err);
+    cn.onerror = (err: unknown) => {
+      log.err('on err', { err: errToStr(err) });
       cn.close();
       if (onError) {
         onError();

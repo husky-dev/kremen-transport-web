@@ -1,7 +1,9 @@
-import { config } from './config';
 import * as Sentry from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
-import { CaptureContext } from '@sentry/types';
+import { Severity } from '@sentry/types';
+import { UnknownDict } from '@utils';
+
+import { config } from './config';
 
 export const initSentry = () =>
   Sentry.init({
@@ -13,9 +15,13 @@ export const initSentry = () =>
     beforeSend: async event => (config.env === 'production' ? event : null),
   });
 
-type SentryEventLevel = 'info' | 'warning' | 'error';
-
-export const captureSentryMessage = (msg: string, level: SentryEventLevel, meta?: unknown) => {
-  const metaStr = meta ? `, ${JSON.stringify(meta)}` : '';
-  Sentry.captureMessage(`${msg}${metaStr}`, level as CaptureContext);
+export const captureSentryMessage = (msg: string, level: Severity, meta?: UnknownDict) => {
+  if (meta) Sentry.setContext('meta', meta);
+  Sentry.captureMessage(msg, level);
 };
+
+export const addSentryBreadcumb = (message: string, level: Severity, data?: UnknownDict) => {
+  Sentry.addBreadcrumb({ message, level, data });
+};
+
+export { Severity as SentrySeverity };

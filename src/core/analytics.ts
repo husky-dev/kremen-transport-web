@@ -60,6 +60,6 @@ export const track = (event: string, params?: Dict) => {
   if (!enabled) {
     return;
   }
-  log.debug('track event=', event);
+  log.debug('track', { event });
   mixpanel.track(event, params);
 };
