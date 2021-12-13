@@ -64,9 +64,9 @@ export const StorageProvider: FC = ({ children }) => {
       log.debug('updating data');
       const [routes, buses] = await Promise.all([api.transport.routes(), api.transport.buses()]);
       log.debug('updating data done', { routes, buses });
-      setRoutes(routes);
+      setAndSaveRoutes(routes);
       routesStorage.set(routes);
-      setBuses(buses);
+      setAndSaveBuses(buses);
       busesStorage.set(buses);
     } catch (err: unknown) {
       log.err('updating data err', { err: errToStr(err) });
@@ -83,7 +83,7 @@ export const StorageProvider: FC = ({ children }) => {
       const [lat, lng, direction, speed] = busesLocations[tid];
       newBuses = newBuses.map(itm => (itm.tid === tid ? { ...itm, lat, lng, direction, speed } : itm));
     }
-    setBuses(newBuses);
+    setAndSaveBuses(newBuses);
     log.debug('updating buses locations done');
   };
 
@@ -99,11 +99,23 @@ export const StorageProvider: FC = ({ children }) => {
           const update = msg.data.find(uitem => uitem.tid === itm.tid);
           return update ? { ...itm, ...update } : itm;
         });
-        setBuses(newBuses);
+        setAndSaveBuses(newBuses);
         busesStorage.set(newBuses);
       }
     },
   });
+
+  // Utils
+
+  const setAndSaveRoutes = (val: TransportRoute[]) => {
+    setRoutes(val);
+    routesStorage.set(val);
+  };
+
+  const setAndSaveBuses = (val: TransportBus[]) => {
+    setBuses(val);
+    busesStorage.set(val);
+  };
 
   return <StorageContext.Provider value={{ buses, routes }}>{children}</StorageContext.Provider>;
 };
