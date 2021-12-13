@@ -11,13 +11,12 @@ import {
   routeIdToColor,
   routeToColor,
   track,
+  useStorage,
 } from '@core';
-import { api, TransportBus, TransportRoute, TransportStation } from '@core/api';
-import { isTransportBusArrOrUndef, isTransportRouteArrOrUndef } from '@core/api/utils';
+import { TransportBus, TransportRoute, TransportStation } from '@core/api';
 import { getStorageParam } from '@core/storage';
-import { useWebScockets } from '@core/ws';
 import { fullScreen, m, Styles, ViewStyleProps } from '@styles';
-import { errToStr, isLatLngOrUndef, isNumArrOrUndef, isNumOrUndef, LatLng } from '@utils';
+import { isLatLngOrUndef, isNumArrOrUndef, isNumOrUndef, LatLng } from '@utils';
 import { includes } from 'lodash';
 import React, { FC, Suspense, useEffect, useRef, useState } from 'react';
 import { GoogleMap } from 'react-google-maps';
@@ -32,8 +31,6 @@ type Props = ViewStyleProps;
 const mapMarkerSize = 46;
 const stationMarkerSize = Math.round(mapMarkerSize / 2.7);
 
-const busesStorage = getStorageParam('buses', isTransportBusArrOrUndef);
-const routesStorage = getStorageParam('routes', isTransportRouteArrOrUndef);
 const selectedStorage = getStorageParam('selected', isNumArrOrUndef);
 const zoomStorage = getStorageParam('zoom', isNumOrUndef);
 const curPositionStorage = getStorageParam('curPosition', isLatLngOrUndef);
@@ -41,8 +38,7 @@ const curPositionStorage = getStorageParam('curPosition', isLatLngOrUndef);
 export const MapScreen: FC<Props> = ({ style }) => {
   const mapRef = useRef<GoogleMap>(null);
 
-  const [allRoutes, setAllRoutes] = useState<TransportRoute[]>(routesStorage.get() || []);
-  const [allBuses, setAllBuses] = useState<TransportBus[]>(busesStorage.get() || []);
+  const { buses: allBuses, routes: allRoutes } = useStorage();
 
   const [center, setCenter] = useState<LatLng>(coordinates.kremen);
   const [zoom, setZoom] = useState<number>(zoomStorage.get() || 14);
@@ -54,38 +50,7 @@ export const MapScreen: FC<Props> = ({ style }) => {
 
   useEffect(() => {
     track('MapScreenVisit');
-    updateData();
   }, []);
-
-  useWebScockets({
-    onMessage: msg => {
-      if (msg.type === 'buses') {
-        log.debug('ws buses update');
-        const curBuses = busesStorage.get();
-        if (!curBuses) return;
-        const newBuses = curBuses.map(itm => {
-          const update = msg.data.find(uitem => uitem.tid === itm.tid);
-          return update ? { ...itm, ...update } : itm;
-        });
-        setAllBuses(newBuses);
-        busesStorage.set(newBuses);
-      }
-    },
-  });
-
-  const updateData = async () => {
-    try {
-      log.debug('updating data');
-      const [routes, buses] = await Promise.all([api.transport.routes(), api.transport.buses()]);
-      log.debug('updating data done', { routes, buses });
-      setAllRoutes(routes);
-      routesStorage.set(routes);
-      setAllBuses(buses);
-      busesStorage.set(buses);
-    } catch (err: unknown) {
-      log.err('updating data err', { err: errToStr(err) });
-    }
-  };
 
   // Map
 

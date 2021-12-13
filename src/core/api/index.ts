@@ -1,7 +1,7 @@
 import { Log } from '@core/log';
 import axios from 'axios';
 
-import { TransportBus, TransportPrediction, TransportRoute } from './types';
+import { TransportBus, TransportBusesLocations, TransportPrediction, TransportRoute } from './types';
 import { ApiReqOpt, getErrFromResp } from './utils';
 
 const log = Log('core.api');
@@ -33,6 +33,7 @@ const getApi = () => {
     transport: {
       routes: async (): Promise<TransportRoute[]> => apiReq<TransportRoute[]>({ path: `transport/routes` }),
       buses: async (): Promise<TransportBus[]> => apiReq<TransportBus[]>({ path: `transport/buses` }),
+      busesLocations: async () => apiReq<TransportBusesLocations>({ path: `transport/buses/locations` }),
       stationPrediction: async (sid: number): Promise<TransportPrediction[]> =>
         apiReq<TransportPrediction[]>({ path: `transport/stations/${sid}/prediction` }),
     },
@@ -42,3 +43,4 @@ const getApi = () => {
 export const api = getApi();
 
 export * from './types';
+export * from './utils';

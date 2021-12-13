@@ -1,5 +1,5 @@
 import { errToStr, isStr, TypeGuard } from '@utils';
-import { Log } from './log';
+import { Log } from '../log';
 
 const log = Log('core.storage');
 
@@ -41,5 +41,7 @@ export const getStorageParam = <T = unknown>(key: string, guard?: TypeGuard<T>) 
     localStorage.removeItem(fullKey);
   };
 
-  return { get, set, remove };
+  const isExist = () => (!!localStorage.getItem(fullKey) ? true : false);
+
+  return { get, set, remove, isExist };
 };
