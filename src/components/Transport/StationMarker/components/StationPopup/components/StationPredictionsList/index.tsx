@@ -6,7 +6,7 @@ import { sortBy } from 'lodash';
 import React, { FC } from 'react';
 import { m, Styles, ViewStyleProps } from '@styles';
 
-import { getItemsSplitByColumns, numToTimeStr } from './utils';
+import { getItemsSplitByColumns, getItemsSplitByRows, numToTimeStr } from './utils';
 
 interface Props extends ViewStyleProps {
   routes: TransportRoute[];
@@ -34,7 +34,7 @@ const StationPredictionsTwoColumn: FC<Props> = ({ style, predictions: prediction
     );
   };
 
-  const rows: TransportPrediction[][] = getItemsSplitByColumns(predictions);
+  const rows: TransportPrediction[][] = getItemsSplitByRows(predictions);
 
   return (
     <View style={m(styles.container, style)}>

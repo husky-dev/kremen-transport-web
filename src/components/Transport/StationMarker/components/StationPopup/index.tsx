@@ -70,7 +70,9 @@ const StationPopup: FC<Props> = ({ style, station, route, routes, onClose }) => 
               <IconArrowUpward style={styles.iconUp} fontSize="inherit" />
             )}
           </View>
-          <View style={styles.title}>{title}</View>
+          <View style={styles.title} flex="1">
+            {title}
+          </View>
         </View>
         {processing && !predictions.length && (
           <View style={styles.loading} row={true} justifyContent="center">
@@ -109,11 +111,15 @@ const styles: Styles = {
     marginRight: 3,
     fontWeight: 'bold',
   },
+
   iconUp: {
     color: colors.green,
   },
   iconDown: {
     color: colors.blue,
+  },
+  title: {
+    fontWeight: 'bold',
   },
   loading: {
     marginTop: 6,
@@ -125,9 +131,6 @@ const styles: Styles = {
   },
   err: {
     marginTop: 3,
-  },
-  title: {
-    fontWeight: 'bold',
   },
 };
 
