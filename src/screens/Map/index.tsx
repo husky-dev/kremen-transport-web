@@ -32,25 +32,45 @@ const mapMarkerSize = 46;
 const stationMarkerSize = Math.round(mapMarkerSize / 2.7);
 
 const selectedStorage = getStorageParam('selected', isNumArrOrUndef);
-const zoomStorage = getStorageParam('zoom', isNumOrUndef);
-const curPositionStorage = getStorageParam('curPosition', isLatLngOrUndef);
+const zoomStorage = getStorageParam('mapZoom', isNumOrUndef);
+const centerStorage = getStorageParam('mapCenter', isLatLngOrUndef);
+const curPositionStorage = getStorageParam('mapCurPosition', isLatLngOrUndef);
 
 export const MapScreen: FC<Props> = ({ style }) => {
   const mapRef = useRef<GoogleMap>(null);
 
   const { buses: allBuses, routes: allRoutes } = useStorage();
 
-  const [center, setCenter] = useState<LatLng>(coordinates.kremen);
+  const [center, setCenter] = useState<LatLng>(centerStorage.get() || coordinates.kremen);
   const [zoom, setZoom] = useState<number>(zoomStorage.get() || 14);
   const [selectedBus, setSelectedBus] = useState<TransportBus | undefined>(undefined);
   const [stationPopupId, setStationPopupId] = useState<number | undefined>(undefined);
   const [displayedRoutes, setDisplayedRoutes] = useState<number[]>(
     selectedStorage.get() || [189, 188, 192, 187, 190, 191],
   );
+  const [mapMoved, setMapMoved] = useState<boolean>(false);
+
+  const [curPosition, setCurPosition] = useState<LatLng | undefined>(curPositionStorage.get());
 
   useEffect(() => {
     track('MapScreenVisit');
   }, []);
+
+  // Data
+
+  const setAndSaveCurPosition = (val: LatLng | undefined) => {
+    setCurPosition(val);
+    if (val) {
+      curPositionStorage.set(val);
+    } else {
+      curPositionStorage.remove();
+    }
+  };
+
+  const setAndSaveCurCenter = (val: LatLng) => {
+    setCenter(val);
+    centerStorage.set(val);
+  };
 
   // Map
 
@@ -70,11 +90,12 @@ export const MapScreen: FC<Props> = ({ style }) => {
     if (!mapRef.current) {
       return;
     }
+    setMapMoved(true);
     log.debug('cener changed');
     const coord = mapRef.current.getCenter();
     const lat = coord.lat();
     const lng = coord.lng();
-    setCenter({ lat, lng });
+    setAndSaveCurCenter({ lat, lng });
   };
 
   const handleMapClick = () => {
@@ -86,12 +107,14 @@ export const MapScreen: FC<Props> = ({ style }) => {
 
   const handleZoomInPress = () => {
     if (mapRef.current) {
+      setMapMoved(true);
       setZoomAndSave(mapRef.current.getZoom() + 1);
     }
   };
 
   const handleZoomOutPress = () => {
     if (mapRef.current) {
+      setMapMoved(true);
       setZoomAndSave(mapRef.current.getZoom() - 1);
     }
   };
@@ -110,24 +133,20 @@ export const MapScreen: FC<Props> = ({ style }) => {
 
   // Cur location
 
-  const [curPosition, setCurPosition] = useState<LatLng | undefined>(curPositionStorage.get());
-
   useEffect(() => {
     if (navigator.geolocation) {
       log.info('geolocation allowed');
       navigator.geolocation.getCurrentPosition(handlePositionReceived, handlePositionErr);
     } else {
       log.info('geolocation not enabled on this device');
-      curPositionStorage.remove();
-      setCurPosition(undefined);
+      setAndSaveCurPosition(undefined);
     }
   }, []);
 
   const handlePositionErr = (err: GeolocationPositionError) => {
     if (err.code === 1) {
       log.info('user denied geolocation prompt');
-      curPositionStorage.remove();
-      setCurPosition(undefined);
+      setAndSaveCurPosition(undefined);
     } else {
       log.err(err.message);
     }
@@ -136,24 +155,23 @@ export const MapScreen: FC<Props> = ({ style }) => {
   const handlePositionReceived = (rawVal: GeolocationPosition) => {
     log.debug('cur position firts received');
     const { latitude: lat, longitude: lng } = rawVal.coords;
-    setCenter({ lat, lng });
-    setCurPosition({ lat, lng });
+    setAndSaveCurPosition({ lat, lng });
+    if (!mapMoved) setAndSaveCurCenter({ lat, lng });
     navigator.geolocation.watchPosition(handlePositionUpdated);
   };
 
   const handlePositionUpdated = (rawVal: GeolocationPosition) => {
     log.debug('cur poisition changed');
     const val = { lat: rawVal.coords.latitude, lng: rawVal.coords.longitude };
-    curPositionStorage.set(val);
-    setCurPosition(val);
+    setAndSaveCurPosition(val);
   };
 
   const handleCurPositionClick = () => {
     log.debug('handle cur location press');
     if (curPosition) {
-      setCenter(curPosition);
+      setAndSaveCurCenter(curPosition);
     } else {
-      alert('Геолокація не увімкнена або дана функція не доступна в вашому браузері');
+      alert('Геолокація не увумкнена або дана функція недоступна у вашому браузері');
     }
   };
 
