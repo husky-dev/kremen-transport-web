@@ -13,7 +13,7 @@ export const defServices: Service[] = [
     title: '#Кремінь.Транспорт',
     descr: 'Карта руху громадського транспорту',
     url: 'https://transport.kremen.dev',
-    color: '#3273dc',
+    color: '#3E7FE8',
   },
   // {
   //   id: '@kremen/deputies-web',

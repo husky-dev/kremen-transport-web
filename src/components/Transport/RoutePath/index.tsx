@@ -14,7 +14,7 @@ export const RoutePath: FC<Props> = ({ route, colors, opacity = 0.7, zIndex = 0 
   const path = route.path.map(([lat, lng]) => ({ lat, lng }));
   return useMemo(
     () => (
-      <Polyline path={path} options={{ strokeWeight: 5, strokeColor: colors.light, strokeOpacity: opacity, zIndex }} />
+      <Polyline path={path} options={{ strokeWeight: 3, strokeColor: colors.light, strokeOpacity: opacity, zIndex }} />
     ),
     [route.path, colors.light, colors.dark, opacity, zIndex],
   );

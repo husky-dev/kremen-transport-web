@@ -21,14 +21,14 @@ export const colorSetFromColor = (val: string): ColorsSet => {
 const base = {
   red: '#D8434E',
   green: '#4CAF50',
-  blue: '#3273dc',
+  blue: '#3E7FE8',
   white: '#fff',
   back: '#000',
   lightGrey: '#BDC3C7',
 };
 
 const named = {
-  primary: '#5097D5',
+  primary: '#3E7FE8',
 };
 
 export const withAlpha = (val: string, alpha: number) => color(val).alpha(alpha).toString();

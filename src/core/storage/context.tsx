@@ -65,9 +65,7 @@ export const StorageProvider: FC = ({ children }) => {
       const [routes, buses] = await Promise.all([api.transport.routes(), api.transport.buses()]);
       log.debug('updating data done', { routes, buses });
       setAndSaveRoutes(routes);
-      routesStorage.set(routes);
       setAndSaveBuses(buses);
-      busesStorage.set(buses);
     } catch (err: unknown) {
       log.err('updating data err', { err: errToStr(err) });
     }
@@ -89,18 +87,22 @@ export const StorageProvider: FC = ({ children }) => {
 
   // WebSockets updates
 
+  const [locationsUpdate, setLocationsUpdate] = useState<Partial<TransportBus>[] | undefined>(undefined);
+
+  useEffect(() => {
+    if (!locationsUpdate) return;
+    const newBuses = buses.map(itm => {
+      const update = locationsUpdate.find(uitem => uitem.tid === itm.tid);
+      return update ? { ...itm, ...update } : itm;
+    });
+    setAndSaveBuses(newBuses);
+  }, [locationsUpdate]);
+
   useWebScockets({
     onMessage: msg => {
       if (msg.type === 'buses') {
         log.debug('ws buses update');
-        const curBuses = busesStorage.get();
-        if (!curBuses) return;
-        const newBuses = curBuses.map(itm => {
-          const update = msg.data.find(uitem => uitem.tid === itm.tid);
-          return update ? { ...itm, ...update } : itm;
-        });
-        setAndSaveBuses(newBuses);
-        busesStorage.set(newBuses);
+        setLocationsUpdate(msg.data);
       }
     },
   });
