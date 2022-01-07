@@ -1,4 +1,5 @@
 import { ControlRoundBtn, DocTitle, View } from '@components/Common';
+import { AlertDialog } from '@components/Dialogs';
 import Map from '@components/Geo/Map';
 import { ServicesAppBar } from '@components/Services';
 import { BusMarker, CurLocMarker, RoutePath, StationMarker } from '@components/Transport';
@@ -318,6 +319,17 @@ export const MapScreen: FC<Props> = ({ style }) => {
         <ControlRoundBtn style={styles.controlsPanelBtn} icon="minus" onClick={handleZoomOutPress} />
         <ControlRoundBtn style={styles.controlsPanelBtn} icon="target" onClick={handleCurPositionClick} />
       </View>
+      <AlertDialog title="Нажаль сервіс недоступний.." visible>
+        <p>
+          <strong>{`Що сталось: `}</strong>
+          додаток використовує дані з офіційного сервісу, який використовує Міська рада міста - Infobus.
+        </p>
+        <p>
+          Це казахстанський сервіс (домен: infobus.kz). Нажаль, через події в країні, він наразі недоступний. Казахстан
+          відключенний від Всесвітної мережі. Сервери з данними також знаходятся там.
+        </p>
+        <p>Нажаль, відновити роботу сервісу поки що неможливо.</p>
+      </AlertDialog>
     </View>
   );
 };
