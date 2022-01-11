@@ -1,7 +1,9 @@
+import { errToStr, isUnknownDict } from '@utils';
 import { isString } from 'lodash';
 import { useEffect, useState } from 'react';
-import { errToStr, isUnknownDict } from '@utils';
-import { getApiRoot, TransportBus } from './api';
+
+import { TransportBus } from './api';
+import { config } from './config';
 import { Log } from './log';
 
 const log = Log('ws');
@@ -48,7 +50,7 @@ const parseMsg = (data: unknown): WsMsg | undefined => {
 
 export const useWebScockets = ({ onOpen, onClose, onMessage, onError }: WsOpt = {}) => {
   const getConnection = () => {
-    const url = `${getApiRoot().ws}/transport/realtime`;
+    const url = `${config.api.ws}/transport/realtime`;
     log.info('new connection', { url });
     const cn = new WebSocket(url);
 

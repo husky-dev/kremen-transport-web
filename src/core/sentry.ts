@@ -12,7 +12,7 @@ export const initSentry = () =>
     release: `${config.sentry.project}@${config.version}`,
     integrations: [new Integrations.BrowserTracing()],
     tracesSampleRate: 1.0,
-    beforeSend: async event => (config.env === 'production' ? event : null),
+    beforeSend: async event => (config.env === 'prd' ? event : null),
   });
 
 export const captureSentryMessage = (msg: string, level: Severity, meta?: UnknownDict) => {

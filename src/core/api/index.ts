@@ -1,32 +1,42 @@
+import { config } from '@core/config';
 import { Log } from '@core/log';
+import { isStr } from '@utils';
 import axios from 'axios';
 
-import { TransportBus, TransportBusesLocations, TransportPrediction, TransportRoute } from './types';
-import { ApiReqOpt, getErrFromResp } from './utils';
+import {
+  EquipmentLogQueryOpt,
+  EquipmentLogRecord,
+  EquipmentMachine,
+  TransportBus,
+  TransportBusesLocations,
+  TransportPrediction,
+  TransportRoute,
+} from './types';
+import { ApiError, ApiReqOpt, isApiErrorResp, isStaus200 } from './utils';
 
 const log = Log('core.api');
 
-export const getApiRoot = () => ({
-  api: 'https://api.kremen.dev',
-  ws: 'wss://api.kremen.dev',
-});
+interface ApiOpt {
+  apiRoot: string;
+}
 
-const getApi = () => {
-  const apiRoot = getApiRoot();
-
+export const getApi = ({ apiRoot }: ApiOpt) => {
   const apiReq = async <T>(opt: ApiReqOpt): Promise<T> => {
     const { path, method = 'get', params } = opt;
-    const reqUrl = `${apiRoot.api}/${path}`;
+    const reqUrl = `${apiRoot}${path}`;
     log.debug('api req', { url: reqUrl, params });
-    const resp = await axios({ method, url: reqUrl, params });
+    const { status, statusText, data } = await axios({ method, url: reqUrl, params, validateStatus: () => true });
     log.debug(`api req done`);
-    const { status } = resp;
-    const data = resp.data as unknown as T;
-    const err = getErrFromResp(status, data);
-    if (err) {
-      throw err;
+    if (!isStaus200(status)) {
+      if (isApiErrorResp(data)) {
+        throw new ApiError(data.code, data.message);
+      } else if (isStr(data)) {
+        throw new ApiError('UNKNOWN', data);
+      } else {
+        throw new Error(`${status}: ${statusText}`);
+      }
     }
-    return data;
+    return data as unknown as T;
   };
 
   return {
@@ -37,10 +47,14 @@ const getApi = () => {
       stationPrediction: async (sid: number): Promise<TransportPrediction[]> =>
         apiReq<TransportPrediction[]>({ path: `transport/stations/${sid}/prediction` }),
     },
+    equipment: {
+      list: async (): Promise<EquipmentMachine[]> => apiReq<EquipmentMachine[]>({ path: `equipment` }),
+      log: async (opt: EquipmentLogQueryOpt) =>
+        apiReq<EquipmentLogRecord[]>({ path: 'equipment/log', params: { format: 'array', ...opt } }),
+    },
   };
 };
 
-export const api = getApi();
-
 export * from './types';
 export * from './utils';
+export const api = getApi({ apiRoot: config.api.url });

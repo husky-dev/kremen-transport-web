@@ -1,5 +1,6 @@
 FROM node:14-alpine3.10 as builder
 
+ENV NODE_ENV=prd
 WORKDIR /usr/src/app
 RUN apk add --update --no-cache make g++ python2
 COPY public ./public

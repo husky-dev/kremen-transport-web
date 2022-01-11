@@ -27,7 +27,7 @@ const logLevelToSymbol = (val: LogLevel): string =>
   });
 
 export const Log = (m?: string) => {
-  const level = logLevelToNum(config.env === 'production' ? 'none' : 'debug');
+  const level = logLevelToNum(config.env === 'prd' ? 'none' : 'debug');
 
   interface LogOpt {
     level: LogLevel;

@@ -6,6 +6,7 @@ const package = require('./package.json');
 const ejs = require('ejs');
 const http = require('http');
 const { markdownPlugin } = require('esbuild-plugin-markdown');
+const htmlMinifier = require('html-minifier').minify;
 
 require('dotenv').config({
   path: path.resolve(process.cwd(), '.env'),
@@ -108,10 +109,19 @@ const isFileExtensionInList = (filePath, extensions) => {
 
 // EJS
 
-const compileEjsFile = (inputFile, outputFile, data) => {
+const compileEjsFile = (inputFile, outputFile, data, env) => {
   mkdirpWithFilePath(outputFile);
   const str = fs.readFileSync(inputFile, 'utf-8');
-  const html = ejs.render(str, { data });
+  let html = ejs.render(str, { data });
+  if (env === 'prd') {
+    html = htmlMinifier(html, {
+      collapseWhitespace: true,
+      collapseInlineTagWhitespace: true,
+      minifyCSS: true,
+      minifyJS: true,
+      removeComments: true,
+    });
+  }
   fs.writeFileSync(outputFile, html);
 };
 
@@ -157,7 +167,7 @@ const serve = (servedir, serverport, buildOptions) => {
 // Run
 
 const run = async () => {
-  const env = process.env.APP_ENV;
+  const env = process.env.NODE_ENV || process.env.APP_ENV;
   const conf = getEnvConfigs();
 
   log.info('copy images');
@@ -167,8 +177,8 @@ const run = async () => {
   const buildOptions = {
     entryPoints: [entryFilePath],
     bundle: true,
-    sourcemap: env !== 'production' || conf.sourcemap,
-    minify: env === 'production',
+    sourcemap: env !== 'prd' || conf.sourcemap,
+    minify: env === 'prd',
     outfile: bundleFilePath,
     watch: conf.watch,
     loader: {
@@ -184,7 +194,6 @@ const run = async () => {
       APP_COMPANY: JSON.stringify(package.company),
       APP_DESCRIPTION: JSON.stringify(package.description),
       APP_ENV: JSON.stringify(process.env.APP_ENV),
-      APP_URL: JSON.stringify(process.env.APP_URL || '/'),
       APP_LOG_LEVEL: JSON.stringify(process.env.APP_LOG_LEVEL),
       MAPS_API_KEY: JSON.stringify(process.env.MAPS_API_KEY),
       SENTRY_DSN: JSON.stringify(process.env.SENTRY_DSN),
@@ -230,7 +239,7 @@ const run = async () => {
       keywords,
       bundleHash,
       cssHash,
-    });
+    }, env);
     log.info('compile ejs file done');
   }
 };

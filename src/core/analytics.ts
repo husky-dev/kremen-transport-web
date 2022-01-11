@@ -8,7 +8,7 @@ import { Log } from './log';
 
 const log = Log('core.analytics');
 
-const enabled = config.env !== 'development';
+const enabled = config.env !== 'dev';
 // const enabled = true;
 
 mixpanel.init(config.mixpanel.token);

@@ -24,9 +24,9 @@ jobs:
           🆕 *kremen-transport-web:* ${{ env.APP_VERSION }} build started
     - name: "Env: setup PRD environment"
       env:
-        ENV_FILE: ${{secrets.ENV_PRD}}
+        ENVFILE: ${{secrets.ENVFILE_PRD}}
       run: |
-        echo "$ENV_FILE" > .env
+        echo "$ENVFILE" > .env
         cat .env >> $GITHUB_ENV
     - name: Login
       uses: docker/login-action@v1

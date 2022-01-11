@@ -28,13 +28,12 @@ declare module '*.md' {
 declare module 'googlemaps';
 
 declare const APP_VERSION: string | undefined;
-declare const APP_ENV: 'dev' | 'prd' | 'loc' | undefined;
+declare const APP_ENV: 'dev' | 'prd' | undefined;
 declare const MAPS_API_KEY: string | undefined;
 declare const APP_NAME: string | undefined;
 declare const APP_TITLE: string | undefined;
 declare const APP_COMPANY: string | undefined;
 declare const APP_DESCRIPTION: string | undefined;
-declare const APP_URL: string | undefined;
 declare const SENTRY_DSN: string | undefined;
 declare const SENTRY_PROJECT: string | undefined;
 
