@@ -32,8 +32,8 @@ export const config: AppConifg = {
   company: APP_COMPANY,
   description: APP_DESCRIPTION,
   api: {
-    url: 'https://api.kremen.dev',
-    ws: 'wss://api.kremen.dev',
+    url: 'https://api.kremen.dev/',
+    ws: 'wss://api.kremen.dev/',
   },
   sentry: {
     dsn: isStr(SENTRY_DSN) ? SENTRY_DSN : '',

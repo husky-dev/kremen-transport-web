@@ -50,7 +50,7 @@ const parseMsg = (data: unknown): WsMsg | undefined => {
 
 export const useWebScockets = ({ onOpen, onClose, onMessage, onError }: WsOpt = {}) => {
   const getConnection = () => {
-    const url = `${config.api.ws}/transport/realtime`;
+    const url = `${config.api.ws}transport/realtime`;
     log.info('new connection', { url });
     const cn = new WebSocket(url);
 
