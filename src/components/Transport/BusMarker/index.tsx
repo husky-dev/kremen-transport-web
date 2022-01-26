@@ -74,8 +74,6 @@ export const BusMarker: FC<Props> = ({
   route,
   popupOpen,
   colors,
-  width = 45,
-  height = 38,
   opacity = 1.0,
   zIndex = 20,
   onPopupClose,
@@ -98,7 +96,7 @@ export const BusMarker: FC<Props> = ({
         title={bus.name}
         icon={{
           url: getIconCode(bus, route, bus.offline ? offlineColors : colors),
-          anchor: new google.maps.Point(Math.round(width / 2), Math.round(height / 2)),
+          anchor: new google.maps.Point(Math.round(85 / 2), Math.round(46 / 2)),
         }}
         zIndex={zIndex}
         opacity={opacity}
@@ -107,7 +105,7 @@ export const BusMarker: FC<Props> = ({
         {popupOpen && <BusPopup bus={bus} route={route} onClose={handlePopupClose} />}
       </Marker>
     ),
-    [lat, lng, opacity, zIndex, width, height, popupOpen, bus.offline, bus.direction],
+    [lat, lng, opacity, zIndex, popupOpen, bus.offline, bus.direction],
   );
 };
 
