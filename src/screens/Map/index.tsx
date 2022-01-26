@@ -268,6 +268,10 @@ export const MapScreen: FC<Props> = ({ style }) => {
         featureType: 'poi',
         stylers: [{ visibility: 'off' }],
       },
+      {
+        featureType: 'transit',
+        stylers: [{ visibility: 'off' }],
+      },
     ],
   };
 
