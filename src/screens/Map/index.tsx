@@ -248,7 +248,7 @@ export const MapScreen: FC<Props> = ({ style }) => {
         bus={bus}
         route={route}
         colors={colors}
-        size={mapMarkerSize}
+        // size={mapMarkerSize}
         zIndex={zIndex}
         opacity={opacity}
         popupOpen={bus.tid === selectedBus?.tid}

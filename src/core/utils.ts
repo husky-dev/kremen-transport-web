@@ -18,7 +18,7 @@ export const routeIdToColor = (rid: number, routes: TransportRoute[]) => {
 };
 
 export const clearRouteNumber = (val: string): string => {
-  let mod: string = val.replace(/^[ТT]/g, '');
+  let mod = val.replace(/[ТтTt-]/g, '');
   mod = mod.trim();
   mod = mod.toUpperCase();
   return mod;
