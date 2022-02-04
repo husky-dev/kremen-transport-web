@@ -61,7 +61,7 @@ const getLabelCode = (label: string = '', position: 'left' | 'right' = 'left') =
   return `
   <g id="label" transform="translate(${position === 'left' ? 0 : 42}, 12.000000)">
     <rect id="background" fill="#FFFFFF" opacity="0.800013951" x="0" y="0" width="43" height="19.3684211" rx="5"></rect>
-    <text id="text" font-family="Roboto-Bold, Roboto" font-size="${fontSize}" font-weight="bold" fill="#000000">
+    <text id="text" font-family="Roboto-Bold, Roboto, Arial" font-size="${fontSize}" font-weight="bold" fill="#000000">
       <tspan x="${x}" y="${y}">${unescape(encodeURIComponent(mod))}</tspan>
     </text>
   </g>
