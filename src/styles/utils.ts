@@ -1,4 +1,4 @@
-import { each, isArray, isBoolean } from 'lodash';
+import { isArr, isBool } from '@utils';
 
 import { MergeStyleVals, Style } from './types';
 
@@ -11,16 +11,12 @@ export const m = (...arr: MergeStyleVals[]): Style => {
     return {};
   }
   let style: Style = {};
-  each(arr, (rawItem: MergeStyleVals) => {
-    const item = isArray(rawItem) ? m(...rawItem) : rawItem;
-    if (isBoolean(item)) {
-      return;
-    }
-    if (!item) {
-      return;
-    }
+  for (const rawItem of arr) {
+    const item = isArr(rawItem) ? m(...rawItem) : rawItem;
+    if (isBool(item)) continue;
+    if (!item) continue;
     style = { ...style, ...item };
-  });
+  }
   return style;
 };
 

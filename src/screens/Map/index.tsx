@@ -17,7 +17,6 @@ import { TransportBus, TransportRoute, TransportStation } from '@core/api';
 import { getStorageParam } from '@core/storage';
 import { fullScreen, m, Styles, ViewStyleProps } from '@styles';
 import { isLatLngOrUndef, isNumArrOrUndef, isNumOrUndef, LatLng } from '@utils';
-import { includes } from 'lodash';
 import React, { FC, Suspense, useEffect, useRef, useState } from 'react';
 import { GoogleMap } from 'react-google-maps';
 
@@ -209,8 +208,8 @@ export const MapScreen: FC<Props> = ({ style }) => {
 
   // Render
 
-  const routes = allRoutes.filter(({ rid }) => includes(displayedRoutes, rid));
-  const buses = allBuses.filter(({ rid }) => includes(displayedRoutes, rid));
+  const routes = allRoutes.filter(({ rid }) => displayedRoutes.includes(rid));
+  const buses = allBuses.filter(({ rid }) => displayedRoutes.includes(rid));
   const stations = routesToStatiosn(routes);
 
   const renderRoutePath = (route: TransportRoute) => {

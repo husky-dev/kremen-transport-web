@@ -8,7 +8,8 @@ import Paper from '@material-ui/core/Paper';
 import IconEdit from '@material-ui/icons/KeyboardArrowDown';
 import IconClose from '@material-ui/icons/KeyboardArrowUp';
 import { colors, m, Styles, ViewStyleProps } from '@styles';
-import { compact, groupBy } from 'lodash';
+import { compact } from '@utils';
+import { groupBy } from 'lodash';
 import React, { FC, useState } from 'react';
 
 import RouteSelectGroup from './components/RouteSelectGroup';

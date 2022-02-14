@@ -2,9 +2,10 @@ import { View } from '@components/Common';
 import { RouteCircle } from '@components/Transport';
 import { findRouteWithId, sortRoutes } from '@core';
 import { TransportPrediction, TransportRoute, TransportStation } from '@core/api';
-import { compact, sortBy, uniq } from 'lodash';
-import React, { FC } from 'react';
 import { m, Styles, ViewStyleProps } from '@styles';
+import { compact } from '@utils';
+import { sortBy, uniq } from 'lodash';
+import React, { FC } from 'react';
 
 interface Props extends ViewStyleProps {
   routes: TransportRoute[];

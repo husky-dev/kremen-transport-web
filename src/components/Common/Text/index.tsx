@@ -1,6 +1,6 @@
-import { isArray, isNumber } from 'lodash';
-import React, { FC } from 'react';
 import { m, MergeStyleVal, px, Style } from '@styles';
+import { isArr, isNum } from '@utils';
+import React, { FC } from 'react';
 
 interface Props {
   className?: string;
@@ -17,7 +17,7 @@ export const Text: FC<Props> = ({ className, style, size, block, children, color
     if (!size) {
       return undefined;
     }
-    if (isNumber(size)) {
+    if (isNum(size)) {
       return { fontSize: px(size) };
     }
     return { fontSize: size };
@@ -28,7 +28,7 @@ export const Text: FC<Props> = ({ className, style, size, block, children, color
     getSizeStyle(),
     color ? { color } : undefined,
     bold ? { fontWeight: 'bold' } : undefined,
-    isArray(style) ? m(...style) : style,
+    isArr(style) ? m(...style) : style,
   );
   return (
     <span className={className} style={finalStyle}>

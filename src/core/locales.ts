@@ -1,4 +1,5 @@
-import { compact, once, uniq } from 'lodash';
+import { compact } from '@utils';
+import { once, uniq } from 'lodash';
 
 const clearLocales = (arr: string[]): string[] => arr.map(item => item.toLowerCase());
 

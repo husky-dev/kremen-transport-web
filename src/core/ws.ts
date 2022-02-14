@@ -1,5 +1,4 @@
-import { errToStr, isUnknownDict } from '@utils';
-import { isString } from 'lodash';
+import { errToStr, isUnknownDict, isStr } from '@utils';
 import { useEffect, useState } from 'react';
 
 import { TransportBus } from './api';
@@ -18,7 +17,7 @@ interface WsOpt {
 type WsMsg = { type: 'buses'; data: Partial<TransportBus>[] };
 
 const parseMsg = (data: unknown): WsMsg | undefined => {
-  if (!isString(data)) {
+  if (!isStr(data)) {
     log.err('incoming message is not a string', { data });
     return undefined;
   }
@@ -28,7 +27,7 @@ const parseMsg = (data: unknown): WsMsg | undefined => {
       log.err('parsed message is not a directory, parsed=', parsed);
       return undefined;
     }
-    if (!isString(parsed.type)) {
+    if (!isStr(parsed.type)) {
       log.err('parsed message does not have type field');
       return undefined;
     }

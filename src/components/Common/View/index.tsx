@@ -1,6 +1,6 @@
-import { isArray } from 'lodash';
-import React, { FC, LegacyRef, MouseEvent, ReactNode, Ref, RefObject } from 'react';
 import { m, MergeStyleVal, Style, Styles } from '@styles';
+import { isArr } from '@utils';
+import React, { FC, LegacyRef, MouseEvent, ReactNode, Ref, RefObject } from 'react';
 
 interface Props {
   divRef?: Ref<HTMLDivElement> | RefObject<HTMLDivElement> | LegacyRef<HTMLDivElement>;
@@ -46,7 +46,7 @@ export const View: FC<Props> = ({
     justifyContent ? { justifyContent } : null,
     alignItems ? { alignItems } : null,
     cursor ? { cursor } : null,
-    isArray(style) ? m(...style) : style,
+    isArr(style) ? m(...style) : style,
   );
   return (
     <div

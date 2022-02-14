@@ -1,8 +1,8 @@
-import { isString } from 'lodash';
+import { isStr } from '@utils';
 import React, { FC } from 'react';
 
 export const Markdown: FC = ({ children }) => {
-  return <div dangerouslySetInnerHTML={isString(children) ? { __html: children } : undefined} />;
+  return <div dangerouslySetInnerHTML={isStr(children) ? { __html: children } : undefined} />;
 };
 
 export default Markdown;
