@@ -19,6 +19,11 @@ declare module '*.json' {
   export default content;
 }
 
+declare module '*.txt' {
+  const content: string;
+  export default content;
+}
+
 declare module '*.md' {
   import { ReactNode } from 'react';
   const content: { html: ReactNode };

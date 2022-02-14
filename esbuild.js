@@ -185,6 +185,7 @@ const run = async () => {
       '.png': 'file',
       '.jpg': 'file',
       '.svg': 'dataurl',
+      '.txt': 'text',
     },
     plugins: [markdownPlugin()],
     define: {

@@ -17,12 +17,11 @@ export const routeIdToColor = (rid: number, routes: TransportRoute[]) => {
   return route ? routeToColor(route) : defRouteColors;
 };
 
-export const clearRouteNumber = (val: string): string => {
-  let mod = val.replace(/[ТтTt-]/g, '');
-  mod = mod.trim();
-  mod = mod.toUpperCase();
-  return mod;
-};
+export const clearRouteNumber = (val: string): string =>
+  val
+    .replace(/[ТтTt-\s]/g, '')
+    .trim()
+    .toUpperCase();
 
 export const sortRoutes = (arr: TransportRoute[]): TransportRoute[] =>
   sortBy(arr, route => {
