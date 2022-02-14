@@ -2,11 +2,11 @@ import { View } from '@components/Common';
 import { RouteCircle } from '@components/Transport';
 import { findRouteWithId, TransportRoute } from '@core';
 import { TransportPrediction, TransportStation } from '@core/api';
+import { m, Styles, ViewStyleProps } from '@styles';
 import { sortBy } from 'lodash';
 import React, { FC } from 'react';
-import { m, Styles, ViewStyleProps } from '@styles';
 
-import { getItemsSplitByColumns, getItemsSplitByRows, numToTimeStr } from './utils';
+import { getItemsSplitByRows, numToTimeStr } from './utils';
 
 interface Props extends ViewStyleProps {
   routes: TransportRoute[];
