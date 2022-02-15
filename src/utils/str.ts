@@ -1,4 +1,4 @@
-import { isBool, isErr, isNull, isNum, isStr, isUndef } from './types';
+import { isErr, isFunc, isNum, isStr, isUnknownDict } from './types';
 
 export const pad = (val: number | string, max: number): string => {
   const str = val.toString();
@@ -42,18 +42,29 @@ export const monthNumberToStr = (val: number): string => {
 
 export const numbersArrToStr = (arr: number[]) => arr.reduce((memo, val) => (memo ? `${memo},${val}` : `${val}`), '');
 
-export const errToStr = (val: unknown): string => {
-  if (isErr(val)) {
-    return val.message;
+/**
+ * Convert unknown error to string
+ * @param err - Error, string, number or an object with `toString()` property
+ */
+export const errToStr = (err: unknown): string | undefined => {
+  if (!err) {
+    return undefined;
   }
-  if (isStr(val) || isNum(val)) {
-    return `${val}`;
+  if (isErr(err)) {
+    return err.message;
   }
-  if (isBool(val)) {
-    return val ? 'true' : 'false';
+  if (isStr(err)) {
+    return err;
   }
-  if (isNull(val) || isUndef(val)) {
-    return '';
+  if (isNum(err)) {
+    return `${err}`;
   }
-  return '';
+  if (isUnknownDict(err) && isStr(err.message)) {
+    return err.message;
+  }
+  if (isUnknownDict(err) && isFunc(err.toString)) {
+    // eslint-disable-next-line @typescript-eslint/no-base-to-string
+    return err.toString();
+  }
+  return undefined;
 };
