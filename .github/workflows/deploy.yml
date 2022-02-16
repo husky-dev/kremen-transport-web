@@ -36,12 +36,12 @@ jobs:
         password: ${{ secrets.CR_PAT }}
     - name: Build
       run: |
-        docker build -t ghcr.io/husky-dev/kremen-transport-web/app:latest .
-        docker build -t ghcr.io/husky-dev/kremen-transport-web/app:$APP_VERSION .
+        docker build -t ghcr.io/husky-dev/kremen-api/transport-web:latest .
+        docker build -t ghcr.io/husky-dev/kremen-api/transport-web:$APP_VERSION .
     - name: Push
       run: |
-        docker push ghcr.io/husky-dev/kremen-transport-web/app:latest
-        docker push ghcr.io/husky-dev/kremen-transport-web/app:$APP_VERSION
+        docker push ghcr.io/husky-dev/kremen-api/transport-web:latest
+        docker push ghcr.io/husky-dev/kremen-api/transport-web:$APP_VERSION
     - name: 'Notify: done'
       uses: appleboy/telegram-action@master
       with:
