@@ -15,9 +15,6 @@ interface AppConifg {
     dsn: string;
     project: string;
   };
-  mixpanel: {
-    token: string;
-  };
 }
 
 type AppEnv = 'dev' | 'prd';
@@ -38,8 +35,5 @@ export const config: AppConifg = {
   sentry: {
     dsn: isStr(SENTRY_DSN) ? SENTRY_DSN : '',
     project: isStr(SENTRY_PROJECT) ? SENTRY_PROJECT : '',
-  },
-  mixpanel: {
-    token: '8133cb5ad59bba7d4dff11d715b39147',
   },
 };

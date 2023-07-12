@@ -1,4 +1,3 @@
-import mixpanel, { Dict } from 'mixpanel-browser';
 import { genId, isStrOrUndef } from '@utils';
 
 import getUserLocale, { getUserLocales } from './locales';
@@ -10,8 +9,6 @@ const log = Log('core.analytics');
 
 const enabled = config.env !== 'dev';
 // const enabled = true;
-
-mixpanel.init(config.mixpanel.token);
 
 // User
 
@@ -36,17 +33,9 @@ const initUser = () => {
   if (!enabled) {
     return;
   }
-  log.info('analytics enabled');
-  mixpanel.identify();
   const locale = getUserLocale();
   const locales = getUserLocales();
   log.debug('locales', { locale, locales });
-  mixpanel.people.set({
-    version: config.version,
-    env: config.env,
-    locale,
-    locales,
-  });
 };
 
 initUser();
@@ -56,10 +45,9 @@ initUser();
  * @param {MetricEvent} event - event name
  * @param {Dict?} params - event additional data
  */
-export const track = (event: string, params?: Dict) => {
+export const track = (event: string, params?: Record<string, string | number | number[]>) => {
   if (!enabled) {
     return;
   }
   log.debug('track', { event });
-  mixpanel.track(event, params);
 };

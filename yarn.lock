@@ -282,11 +282,6 @@
   dependencies:
     "@types/google-maps" "*"
 
-"@types/mixpanel-browser@2.35.8":
-  version "2.35.8"
-  resolved "https://registry.yarnpkg.com/@types/mixpanel-browser/-/mixpanel-browser-2.35.8.tgz#00791ee65eb8a075b88416549040c172160697bd"
-  integrity sha512-xXNnuNu4Uw7S0xx+6orQlmSrdFkG03Q8qGQi9Uitm0axCRtKvEY35sHibihPlOa0CRZXyoHONfJRtITRjFRUxQ==
-
 "@types/prop-types@*":
   version "15.7.3"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.3.tgz#2ab0d5da2e5815f94b0b9d4b95d1e5f243ab2ca7"
@@ -2083,11 +2078,6 @@ minimatch@^3.0.4:
   integrity sha512-yJHVQEhyqPLUTgt9B83PXu6W3rx4MvvHvSUvToogpwoGDOUQ+yDrR0HRot+yOCdCO7u4hX3pWft6kWBBcqh0UA==
   dependencies:
     brace-expansion "^1.1.7"
-
-mixpanel-browser@2.42.0:
-  version "2.42.0"
-  resolved "https://registry.yarnpkg.com/mixpanel-browser/-/mixpanel-browser-2.42.0.tgz#85c056577875f6624358bf0d7dcd13678c8277db"
-  integrity sha512-9IC/+BYVIG3PfLn1ubkLsQdXc5dKot3sIXHf56GqssyLCOPPwlZfwhZqg1t8HC/sxGqLCL/HON3YbR7oiXMbeg==
 
 ms@2.1.2, ms@^2.1.1:
   version "2.1.2"
