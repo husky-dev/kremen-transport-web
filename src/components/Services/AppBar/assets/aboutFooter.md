@@ -2,4 +2,4 @@
 
 З питаннями, пропозиціями та інформацією про помилки звертатись:
 
-[hello@smartapp.dev](mailto:hello@smartapp.dev)
+[hello@husky-dev.me](mailto:hello@husky-dev.me)
