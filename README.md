@@ -1,4 +1,4 @@
-# #Kremen.Transport - Web app
+# #Kremen.Transport - Web
 
 Map of public transport in Kremenchuk City, Ukraine.
 
