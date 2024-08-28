@@ -35,6 +35,20 @@ const zoomStorage = getStorageParam('mapZoom', isNumOrUndef);
 const centerStorage = getStorageParam('mapCenter', isLatLngOrUndef);
 const curPositionStorage = getStorageParam('mapCurPosition', isLatLngOrUndef);
 
+const filterExistingRouteIds = (routes: TransportRoute[], ids: number[]) => {
+  return ids.filter(id => routes.some(route => route.rid === id));
+};
+
+const defRids = [16, 7, 10, 2];
+
+const getInitSelectedRoutes = (allRoutes: TransportRoute[]) => {
+  const storedRids = selectedStorage.get();
+  if (!storedRids) return defRids;
+  const filtStoredRids = filterExistingRouteIds(allRoutes, storedRids);
+  if (filtStoredRids.length === 0) return defRids;
+  return filtStoredRids;
+};
+
 export const MapScreen: FC<Props> = ({ style }) => {
   const mapRef = useRef<GoogleMap>(null);
 
@@ -44,9 +58,7 @@ export const MapScreen: FC<Props> = ({ style }) => {
   const [zoom, setZoom] = useState<number>(zoomStorage.get() || 14);
   const [selectedBus, setSelectedBus] = useState<TransportBus | undefined>(undefined);
   const [stationPopupId, setStationPopupId] = useState<number | undefined>(undefined);
-  const [displayedRoutes, setDisplayedRoutes] = useState<number[]>(
-    selectedStorage.get() || [189, 188, 192, 187, 190, 191],
-  );
+  const [displayedRoutes, setDisplayedRoutes] = useState<number[]>(getInitSelectedRoutes(allRoutes));
   const [mapMoved, setMapMoved] = useState<boolean>(false);
 
   const [curPosition, setCurPosition] = useState<LatLng | undefined>(curPositionStorage.get());

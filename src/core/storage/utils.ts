@@ -3,7 +3,7 @@ import { Log } from '../log';
 
 const log = Log('core.storage');
 
-const version = 1;
+const version = 2;
 
 export const getStorageParam = <T = unknown>(key: string, guard?: TypeGuard<T>) => {
   const fullKey = `kremen:transport:${version}:${key}`;
