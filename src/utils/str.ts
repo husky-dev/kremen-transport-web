@@ -1,70 +1,46 @@
-import { isErr, isFunc, isNum, isStr, isUnknownDict } from './types';
+import { isBool, isErr, isNull, isNum, isStr, isUndef } from './types';
 
-export const pad = (val: number | string, max: number): string => {
-  const str = val.toString();
-  return str.length < max ? pad(`0${str}`, max) : str;
+export const pad = (val: number, length: number): string => {
+  let str: string = `${val}`;
+  while (str.length < length) {
+    str = `0${str}`;
+  }
+  return str;
 };
 
-export const capitalizeFirstLetter = (str: string): string => {
-  return str.charAt(0).toUpperCase() + str.slice(1);
+export const errToStr = (val: unknown): string => {
+  if (isErr(val)) {
+    return val.message;
+  }
+  if (isStr(val) || isNum(val)) {
+    return `${val}`;
+  }
+  if (isBool(val)) {
+    return val ? 'true' : 'false';
+  }
+  if (isNull(val) || isUndef(val)) {
+    return '';
+  }
+  return '';
 };
 
-export const monthNumberToStr = (val: number): string => {
-  switch (val) {
-    case 0:
-      return 'Янв';
-    case 1:
-      return 'Фев';
-    case 2:
-      return 'Мар';
-    case 3:
-      return 'Апр';
-    case 4:
-      return 'Май';
-    case 5:
-      return 'Июн';
-    case 6:
-      return 'Июл';
-    case 7:
-      return 'Авг';
-    case 8:
-      return 'Сен';
-    case 9:
-      return 'Окт';
-    case 10:
-      return 'Ноя';
-    case 11:
-      return 'Дек';
-    default:
-      return '';
-  }
+export const yearsNumToUkStr = (val: number) => {
+  if (val >= 9 && val <= 20) return 'років';
+  const rest = val % 10;
+  const base = rest <= 4 ? 'рік' : 'років';
+  return [2, 3, 4].includes(rest) ? `${base}и` : base;
 };
 
-export const numbersArrToStr = (arr: number[]) => arr.reduce((memo, val) => (memo ? `${memo},${val}` : `${val}`), '');
+export const daysNumToUkStr = (val: number) => {
+  if (val >= 9 && val <= 20) return 'днів';
+  const rest = val % 10;
+  if (rest === 1) return 'день';
+  return [2, 3, 4].includes(rest) ? `дня` : 'днів';
+};
 
-/**
- * Convert unknown error to string
- * @param err - Error, string, number or an object with `toString()` property
- */
-export const errToStr = (err: unknown): string | undefined => {
-  if (!err) {
-    return undefined;
-  }
-  if (isErr(err)) {
-    return err.message;
-  }
-  if (isStr(err)) {
-    return err;
-  }
-  if (isNum(err)) {
-    return `${err}`;
-  }
-  if (isUnknownDict(err) && isStr(err.message)) {
-    return err.message;
-  }
-  if (isUnknownDict(err) && isFunc(err.toString)) {
-    // eslint-disable-next-line @typescript-eslint/no-base-to-string
-    return err.toString();
-  }
-  return undefined;
+export const monthsNumToUkStr = (val: number) => {
+  if (val >= 9 && val <= 20) return 'місяців';
+  const rest = val % 10;
+  if (rest === 1) return 'місяць';
+  return [2, 3, 4].includes(rest) ? `місяця` : 'місяців';
 };

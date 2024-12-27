@@ -3,7 +3,7 @@ export interface UnknownDict {
 }
 
 export const isUnknownDict = (candidate: unknown): candidate is UnknownDict =>
-  typeof candidate === 'object' && candidate !== null;
+  !isArr(candidate) && typeof candidate === 'object' && candidate !== null;
 
 export const isStr = (val: unknown): val is string => typeof val === 'string';
 export const isStrOrUndef = (val: unknown): val is string | undefined => isStr(val) || isUndef(val);
@@ -32,7 +32,7 @@ export const select = <K extends string | number, T>(key: K, data: Record<K, T>)
 export const compact = <D>(arr: (D | null | undefined)[]): D[] => {
   const newArr: D[] = [];
   for (const itm of arr) {
-    if (!isUndef(itm) && !isNull(itm)) newArr.push(itm);
+    if (!isUndef(itm) && !isNull(itm) && itm !== '') newArr.push(itm);
   }
   return newArr;
 };
@@ -47,6 +47,16 @@ export const omit = <D extends object>(val: D, keys: (keyof D)[]): Partial<D> =>
     }
   }
   return res;
+};
+
+export const uniq = <D>(arr: D[]): D[] => Array.from(new Set(arr));
+
+export const uniqBy = <D>(arr: D[], key: keyof D): D[] => {
+  const seen = new Set();
+  return arr.filter(itm => {
+    const k = itm[key];
+    return seen.has(k) ? false : seen.add(k);
+  });
 };
 
 export const removeNullProps = <T>(obj: T): T => {
@@ -94,6 +104,24 @@ export const shallowCompareObjects = (o1: unknown, o2: unknown): boolean => {
     }
   }
   return true;
+};
+
+export const sortBy = <T>(arr: T[], key: keyof T): T[] => arr.sort((a, b) => (a[key] > b[key] ? 1 : -1));
+
+export const sortByFn = <T>(arr: T[], fn: (a: T, b: T) => number): T[] => arr.sort(fn);
+
+export const groupBy = <T, K extends string | number>(arr: T[], keyFn: (itm: T) => K): Record<K, T[]> => {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+  const res: Record<K, T[]> = {} as Record<K, T[]>;
+  for (const itm of arr) {
+    const key = keyFn(itm);
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (!res[key]) {
+      res[key] = [];
+    }
+    res[key].push(itm);
+  }
+  return res;
 };
 
 // Guards

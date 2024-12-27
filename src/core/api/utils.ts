@@ -1,4 +1,4 @@
-import { isStr, isUndef, isUnknownDict } from '@utils';
+import { isStr, isUndef, isUnknownDict } from '@/utils';
 import { AxiosRequestConfig } from 'axios';
 
 export interface ApiReqOpt {

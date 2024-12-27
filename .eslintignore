@@ -8,5 +8,10 @@
 *.md
 *.graphql
 *.js
+*.jsx
 *.html
-*.txt
+*.snap
+*.mov
+*.webm
+*.mp4
+ssr/src

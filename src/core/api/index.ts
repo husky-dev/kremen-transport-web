@@ -1,8 +1,4 @@
-import { config } from '@core/config';
-import { Log } from '@core/log';
-import { isStr } from '@utils';
-import axios from 'axios';
-
+import { Log } from '@/core/log';
 import {
   EquipmentLogQueryOpt,
   EquipmentLogRecord,
@@ -11,10 +7,13 @@ import {
   TransportBusesLocations,
   TransportPrediction,
   TransportRoute,
-} from './types';
+} from '@/types';
+import { isStr } from '@/utils';
+import axios from 'axios';
+
 import { ApiError, ApiReqOpt, isApiErrorResp, isStaus200 } from './utils';
 
-const log = Log('core.api');
+const log = Log('api');
 
 interface ApiOpt {
   apiRoot: string;
@@ -36,6 +35,7 @@ export const getApi = ({ apiRoot }: ApiOpt) => {
         throw new Error(`${status}: ${statusText}`);
       }
     }
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     return data as unknown as T;
   };
 
@@ -55,6 +55,5 @@ export const getApi = ({ apiRoot }: ApiOpt) => {
   };
 };
 
-export * from './types';
 export * from './utils';
-export const api = getApi({ apiRoot: config.api.url });
+export const api = getApi({ apiRoot: 'https://api.husky-dev.me/' });

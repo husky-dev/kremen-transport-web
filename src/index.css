@@ -1,21 +1,4 @@
-body, html {
-  font-family: "Roboto", sans-serif;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-a {
-  font-weight: bold;
-  color: #5097D5;
-  border-bottom: 1px dashed #5097D5;
-  text-decoration: none;
-}
-
-a.link-img-opacity {
-  opacity: 1;
-  transition: opacity .2s ease-in-out;
-  border-bottom: none;
-  text-decoration: none;
-}
-
-a.link-img-opacity:hover {
-  opacity: .6;
-}

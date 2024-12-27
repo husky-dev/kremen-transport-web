@@ -1,33 +1,38 @@
 const esbuild = require('esbuild');
-const crypto = require('crypto');
-const fs = require('fs');
 const path = require('path');
-const package = require('./package.json');
-const ejs = require('ejs');
+const fs = require('fs');
+const crypto = require('crypto');
 const http = require('http');
-const { markdownPlugin } = require('esbuild-plugin-markdown');
-const htmlMinifier = require('html-minifier').minify;
+const postCssPlugin = require('./tools/postcss-plugin.js');
+const tailwindPlugin = require('tailwindcss');
+const tailwindConfig = require('./tailwind.config.js');
+const autoprefixer = require('autoprefixer');
 
-require('dotenv').config({
-  path: path.resolve(process.cwd(), '.env'),
-});
-
-// Params
+const { name, version } = require('./package.json');
 
 const cwd = process.cwd();
+
+/* Src configs */
 const srcPath = `${cwd}/src`;
-const distPath = `${cwd}/dist`;
-const publicPath = `${cwd}/public`;
 const entryFilePath = `${srcPath}/index.tsx`;
+const publicPath = `${cwd}/public`;
+const templateFilePath = `${publicPath}/index.html`;
+
+/* Dist configs */
+const distPath = `${cwd}/dist`;
 const bundleFilePath = `${distPath}/app.js`;
 const cssFilePath = `${distPath}/app.css`;
+
+/* Serve configs */
 const servePort = parseInt(process.env.PORT || process.env.APP_PORT || 8080, 10);
 
-// Utils
+/* Utils */
+
+const verbose = true; // Use for debug
 
 const log = {
-  trace: (...args) => console.log('[*]:', ...args),
-  debug: (...args) => console.log('[-]:', ...args),
+  trace: (...args) => verbose && console.log('[*]:', ...args),
+  debug: (...args) => verbose && console.log('[-]:', ...args),
   info: (...args) => console.log('[+]:', ...args),
   err: (...args) => console.error(...args),
 };
@@ -37,29 +42,57 @@ const openUrl = url => {
   require('child_process').exec(startCmd + ' ' + url);
 };
 
-// Configs
+/* Params */
 
-const getEnvConfigs = () => {
-  const opts = { watch: false, serve: false, sourcemap: false, open: false };
+const getParams = () => {
+  const params = { watch: false, serve: false, open: false, sourcemap: false };
   const args = process.argv.slice(2, process.argv.length);
   for (const arg of args) {
-    if (arg === '--watch' || arg === '-w') {
-      opts.watch = true;
-    }
-    if (arg === '--serve') {
-      opts.serve = true;
-    }
-    if (arg === '--sourcemap') {
-      opts.sourcemap = true;
-    }
-    if (arg === '--open') {
-      opts.open = true;
-    }
+    if (arg === '--watch' || arg === '-w') params.watch = true;
+    if (arg === '--serve') params.serve = true;
+    if (arg === '--open') params.open = true;
+    if (arg === '--sourcemap') params.sourcemap = true;
   }
-  return opts;
+  return params;
 };
 
-// Files
+/* Envs */
+
+const getEnvName = () => {
+  const nodeEnv = process.env.NODE_ENV;
+  if (nodeEnv) {
+    const modNodeEnv = nodeEnv.toLowerCase();
+    if (['dev', 'develop', 'development'].includes(modNodeEnv)) return 'development';
+    if (['prd', 'prod', 'production'].includes(modNodeEnv)) return 'production';
+  }
+  return 'production';
+};
+
+const getEnvValue = (key, defaultValue) => {
+  const envValue = process.env[key];
+  if (envValue) return envValue;
+  const envFileParams = getEnvFileParams();
+  if (envFileParams[key]) return envFileParams[key];
+  if (defaultValue) return defaultValue;
+  throw new Error(`Env ${key} not found`);
+};
+
+const getEnvFileParams = () => {
+  if (!fs.existsSync('.env')) return {};
+  const content = fs.readFileSync('.env', 'utf8');
+  const lines = content.split('\n');
+  const params = {};
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (!line) continue;
+    if (line.startsWith('#')) continue;
+    const [key, value] = line.split('=');
+    params[key] = value;
+  }
+  return params;
+};
+
+/* Files */
 
 const getFileHash = async filename =>
   new Promise((resolve, reject) => {
@@ -107,115 +140,97 @@ const isFileExtensionInList = (filePath, extensions) => {
   return extensions.includes(ext.substring(1).toLocaleLowerCase());
 };
 
-// EJS
+/* Template */
 
-const compileEjsFile = (inputFile, outputFile, data, env) => {
-  mkdirpWithFilePath(outputFile);
-  const str = fs.readFileSync(inputFile, 'utf-8');
-  let html = ejs.render(str, { data });
-  if (env === 'prd') {
-    html = htmlMinifier(html, {
-      collapseWhitespace: true,
-      collapseInlineTagWhitespace: true,
-      minifyCSS: true,
-      minifyJS: true,
-      removeComments: true,
-    });
-  }
-  fs.writeFileSync(outputFile, html);
+const getTemplateHtml = (opt) => {
+  let html = fs.readFileSync(templateFilePath, 'utf8');
+  if (opt.title) html = html.replace(/<title>.*<\/title>/, `<title>${opt.title}</title>`);
+  if (opt.description) html = html.replace(/<meta name="description" content=".*">/, `<meta name="description" content="${opt.description}">`);
+  if (opt.cssFilePath) html = html.replace(/<link rel="stylesheet" href="\/app.css">/, `<link rel="stylesheet" href="${opt.cssFilePath}">`);
+  if (opt.jsFilePath) html = html.replace(/<script src="\/app.js"><\/script>/, `<script src="${opt.jsFilePath}"></script>`);
+  return html;
 };
 
-// Serve
+/* Serve */
 
-const serve = (servedir, serverport, buildOptions) => {
-  esbuild
-    .serve(
-      {
-        servedir,
-        port: serverport - 1,
-        onRequest: args => log.trace(`${args.remoteAddress} - "${args.method} ${args.path}" ${args.status} [${args.timeInMS}ms]`),
-      },
-      buildOptions,
-    )
-    .then(result => {
-      const { host, port } = result;
-      const proxy = http.createServer((req, res) => {
-        const forwardRequest = path => {
-          const options = {
-            hostname: host,
-            port,
-            path,
-            method: req.method,
-            headers: req.headers,
-          };
+const serve = async (servedir, serverport, buildOptions) => {
+  const ctx = await esbuild.context(buildOptions);
+  const { host, port } = await ctx.serve({ servedir });
 
-          const proxyReq = http.request(options, proxyRes => {
-            if (proxyRes.statusCode === 404) {
-              return forwardRequest('/');
-            }
-            res.writeHead(proxyRes.statusCode, proxyRes.headers);
-            proxyRes.pipe(res, { end: true });
-          });
-          req.pipe(proxyReq, { end: true });
-        };
-        forwardRequest(req.url);
+  http.createServer((req, res) => {
+    const forwardRequest = path => {
+      const options = {
+        hostname: host,
+        port,
+        path,
+        method: req.method,
+        headers: req.headers,
+      };
+
+      const proxyReq = http.request(options, proxyRes => {
+        if (proxyRes.statusCode === 404) {
+          return forwardRequest('/');
+        }
+        res.writeHead(proxyRes.statusCode, proxyRes.headers);
+        proxyRes.pipe(res, { end: true });
       });
-      proxy.listen(serverport);
-    });
+      req.pipe(proxyReq, { end: true });
+    };
+    forwardRequest(req.url);
+  }).listen(serverport);
 };
 
-// Run
+/* Run */
 
 const run = async () => {
-  const env = process.env.NODE_ENV || process.env.APP_ENV;
-  const conf = getEnvConfigs();
+  const params = getParams();
+  log.debug('params=', params);
 
-  log.info('copy images');
-  copyFilesInFolder(publicPath, distPath, ['png']);
-  log.info('copy images done');
+  const env = getEnvName();
+  log.debug('env=', env);
+
+  log.info('copy public files');
+  copyFilesInFolder(`${cwd}/public`, distPath, ['ico', 'js', 'png', 'json', 'svg', 'jpg', 'jpeg', 'txt', 'xml']);
 
   const buildOptions = {
     entryPoints: [entryFilePath],
     bundle: true,
-    sourcemap: env !== 'prd' || conf.sourcemap,
-    minify: env === 'prd',
+    sourcemap: env !== 'production' || params.sourcemap,
+    minify: env === 'production',
     outfile: bundleFilePath,
-    watch: conf.watch,
+    publicPath: '/',
     loader: {
       '.png': 'file',
       '.jpg': 'file',
-      '.svg': 'dataurl',
-      '.txt': 'text',
+      '.svg': 'text',
+      '.md': 'text',
     },
-    plugins: [markdownPlugin()],
     define: {
-      APP_VERSION: JSON.stringify(package.version),
-      APP_NAME: JSON.stringify(package.name),
-      APP_TITLE: JSON.stringify(package.title),
-      APP_COMPANY: JSON.stringify(package.company),
-      APP_DESCRIPTION: JSON.stringify(package.description),
-      APP_ENV: JSON.stringify(process.env.APP_ENV),
-      APP_LOG_LEVEL: JSON.stringify(process.env.APP_LOG_LEVEL),
-      MAPS_API_KEY: JSON.stringify(process.env.MAPS_API_KEY),
-      SENTRY_DSN: JSON.stringify(process.env.SENTRY_DSN),
-      SENTRY_PROJECT: JSON.stringify(process.env.SENTRY_PROJECT),
-      global: 'window',
+      'APP_ENV': JSON.stringify(env),
+      'APP_NAME': JSON.stringify(name),
+      'APP_VERSION': JSON.stringify(version),
+      'MAPS_API_KEY': JSON.stringify(getEnvValue('MAPS_API_KEY')),
     },
+    plugins: [
+      postCssPlugin({ plugins: [tailwindPlugin(tailwindConfig), autoprefixer] }),
+    ],
   };
 
-  if (conf.serve) {
-    log.info('compile ejs file');
-    const { name, version, title, description, company, url, keywords } = package;
-    compileEjsFile(`${publicPath}/index.ejs`, `${distPath}/index.html`, { name, version, title, description, company, url, keywords });
-    log.info('compile ejs file done');
+  if (params.serve) {
+    // Serve mode
+    log.info('generating index.html');
+    fs.mkdirSync(distPath, { recursive: true });
+    fs.writeFileSync(`${distPath}/index.html`, getTemplateHtml({}));
+    log.info('generating index.html done');
 
     log.info(`start serving at http://localhost:${servePort}/`);
-    serve(distPath, servePort, buildOptions);
-    if (conf.open) {
-      log.info(`opening http://localhost:${servePort}/ at browser`);
+    serve(distPath, servePort, { ...buildOptions, sourcemap: 'inline', minify: false });
+    if (params.open) {
+      log.info(`open browser at http://localhost:${servePort}/`);
       openUrl(`http://localhost:${servePort}/`);
     }
   } else {
+    // Dist mode
     log.info('bundle js');
     await esbuild.build(buildOptions);
     log.info('bundle js done');
@@ -228,20 +243,13 @@ const run = async () => {
     const cssHash = (await getFileHash(cssFilePath)).slice(0, 10);
     log.info(`getting css hash done, ` + cssHash);
 
-    log.info('compile ejs file');
-    const { name, version, title, description, company, url, keywords } = package;
-    compileEjsFile(`${publicPath}/index.ejs`, `${distPath}/index.html`, {
-      name,
-      version,
-      title,
-      description,
-      company,
-      url,
-      keywords,
-      bundleHash,
-      cssHash,
-    }, env);
-    log.info('compile ejs file done');
+    log.info('generating index.html');
+    fs.mkdirSync(distPath, { recursive: true });
+    fs.writeFileSync(`${distPath}/index.html`, getTemplateHtml({
+      jsFilePath: `/app.js?${bundleHash}`,
+      cssFilePath: `/app.css?${cssHash}`,
+    }));
+    log.info('generating index.html done');
   }
 };
 
@@ -249,3 +257,4 @@ run().catch(err => {
   log.err(err);
   process.exit(1);
 });
+

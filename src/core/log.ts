@@ -1,8 +1,6 @@
 /* eslint-disable no-console */
-import { select, UnknownDict } from '@utils';
-
+import { select, UnknownDict } from '@/utils';
 import { config } from './config';
-import { addSentryBreadcumb, captureSentryMessage, SentrySeverity } from './sentry';
 
 type LogLevel = 'none' | 'err' | 'warn' | 'info' | 'debug' | 'trace';
 
@@ -27,7 +25,8 @@ const logLevelToSymbol = (val: LogLevel): string =>
   });
 
 export const Log = (m?: string) => {
-  const level = logLevelToNum(config.env === 'prd' ? 'none' : 'debug');
+  // const level = logLevelToNum(config.env === 'production' ? 'none' : 'debug');
+  const level = logLevelToNum('debug');
 
   interface LogOpt {
     level: LogLevel;
@@ -54,19 +53,19 @@ export const Log = (m?: string) => {
 
   return {
     err: (msg: string, meta?: UnknownDict) => {
-      captureSentryMessage(msg, SentrySeverity.Error, meta);
+      // captureSentryMessage(msg, SentrySeverity.Error, meta);
       logWithOpt({ msg, meta, level: 'err' });
     },
     warn: (msg: string, meta?: UnknownDict) => {
-      captureSentryMessage(msg, SentrySeverity.Warning, meta);
+      // captureSentryMessage(msg, SentrySeverity.Warning, meta);
       logWithOpt({ msg, meta, level: 'warn' });
     },
     info: (msg: string, meta?: UnknownDict) => {
-      addSentryBreadcumb(msg, SentrySeverity.Info, meta);
+      // addSentryBreadcumb(msg, SentrySeverity.Info, meta);
       logWithOpt({ msg, meta, level: 'info' });
     },
     debug: (msg: string, meta?: UnknownDict) => {
-      addSentryBreadcumb(msg, SentrySeverity.Debug, meta);
+      // addSentryBreadcumb(msg, SentrySeverity.Debug, meta);
       logWithOpt({ msg, meta, level: 'debug' });
     },
     trace: (msg: string, meta?: UnknownDict) => logWithOpt({ msg, meta, level: 'trace' }),
