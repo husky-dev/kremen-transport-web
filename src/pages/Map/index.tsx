@@ -253,7 +253,7 @@ export const MapPage: FC<Props> = () => {
       <PageTitle title="Громадський транспорт Кременчука" />
       <NavBar className="absolute left-0 top-0 right-0 z-10" />
       <Map
-        className="w-screen h-screen z-0"
+        className="absolute left-0 top-0 right-0 bottom-0 overflow-hidden z-0"
         id="routes-map"
         styles={[
           {
