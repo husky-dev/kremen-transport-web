@@ -1,15 +1,14 @@
+import { IconBtn } from '@/components/Buttons';
 import { Markdown, PageContainer, PageContent, PageTitle } from '@/components/Layout';
 import { mc, StyleProps, TestIdProps } from '@/utils';
 import React, { FC } from 'react';
 
-import content from './content.md';
-import { IconBtn } from '@/components/Buttons';
-import { routes } from '../routes';
+interface Props extends StyleProps, TestIdProps {
+  title: string;
+  content: string;
+}
 
-type Props = StyleProps & TestIdProps;
-
-export const AboutPage: FC<Props> = ({ testId, className, style }) => {
-  const title = 'Про додаток';
+export const ContentPage: FC<Props> = ({ testId, className, style, title, content }) => {
   return (
     <>
       <PageTitle title={title} />
@@ -18,7 +17,7 @@ export const AboutPage: FC<Props> = ({ testId, className, style }) => {
           className="w-full max-w-3xl"
           title={
             <div className={mc('flex flex-row items-center', 'space-x-2')}>
-              <IconBtn square icon="chevron-left" color="neutral" to={routes.index} />
+              <IconBtn square icon="chevron-left" color="neutral" to="/" />
               <div>{title}</div>
             </div>
           }
@@ -30,4 +29,4 @@ export const AboutPage: FC<Props> = ({ testId, className, style }) => {
   );
 };
 
-export default AboutPage;
+export default ContentPage;

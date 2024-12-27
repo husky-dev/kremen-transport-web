@@ -4,3 +4,4 @@ export * from './PageContainer';
 export * from './PageContent';
 export * from './NavBar';
 export * from './Theme';
+export * from './ContentPage';
