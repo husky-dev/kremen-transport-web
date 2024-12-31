@@ -43,8 +43,6 @@ const centerStorage = getStorage({ key: 'kremen:center', guard: isLatLngOrUndef 
 
 const defRids = [16, 7, 2, 10];
 
-const busesUpdateInterval = 1000 * 3; // 3 sec
-
 const updateBusesWithLocations = (buses: TransportBus[], locations: TransportBusesLocations) => {
   return buses.map(itm => {
     const newLoc = locations[itm.tid];
@@ -72,7 +70,7 @@ export const MapPage: FC<Props> = () => {
   }, []);
 
   useEffect(() => {
-    const interval = setInterval(() => locationsUpdate(), busesUpdateInterval);
+    const interval = setInterval(() => locationsUpdate(), 1000 * 3);
     return () => clearInterval(interval);
   }, []);
 
