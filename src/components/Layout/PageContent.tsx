@@ -3,7 +3,7 @@ import React, { FC, PropsWithChildren, ReactElement, ReactNode } from 'react';
 
 interface Props extends StyleProps, TestIdProps, PropsWithChildren {
   contentClassName?: string;
-  title?: string | ReactNode | ReactElement | JSX.Element;
+  title?: string | ReactNode | ReactElement;
   backgroundColor?: 'bg-base-100' | 'bg-base-200' | 'bg-base-300';
   renderHeaderRight?: () => ReactNode;
   renderSubheader?: () => ReactNode;
