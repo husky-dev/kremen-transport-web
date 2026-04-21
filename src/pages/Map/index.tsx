@@ -1,4 +1,5 @@
 import { NavBar, PageTitle } from '@/components/Layout';
+import { MapPinIcon } from '@heroicons/react/24/outline';
 import { BusMarker, CurPositionMarker, RoutePath, StationMarker } from '@/components/Transport';
 import { api } from '@/core/api';
 import { Log } from '@/core/log';
@@ -249,7 +250,7 @@ export const MapPage: FC<Props> = () => {
   return (
     <>
       <PageTitle title="Громадський транспорт Кременчука" />
-      <NavBar className="absolute left-0 top-0 right-0 z-10" />
+      <NavBar className="absolute left-0 top-0 right-0 z-10" activeBusCount={curBuses.length} />
       <Map
         className="absolute left-0 top-0 right-0 bottom-0 overflow-hidden z-0"
         id="routes-map"
@@ -279,6 +280,16 @@ export const MapPage: FC<Props> = () => {
         {curStations.map(renderStationMarker)}
         {!!curPosition && <CurPositionMarker size={mapMarkerSize} position={curPosition} onClick={hanldePositionMarkerClick} />}
       </Map>
+      {curPosition && (
+        <button
+          type="button"
+          className="absolute bottom-6 right-4 z-10 btn btn-circle btn-primary shadow-lg"
+          onClick={hanldePositionMarkerClick}
+          aria-label="Моє місцезнаходження"
+        >
+          <MapPinIcon className="w-5 h-5" />
+        </button>
+      )}
       <div className={mc('absolute top-[72px] left-0 w-full sm:w-auto', 'px-2')}>
         <RoutesPanel
           className={mc('w-full sm:w-72')}

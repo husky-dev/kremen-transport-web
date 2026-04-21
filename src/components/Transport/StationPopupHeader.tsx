@@ -1,5 +1,5 @@
 import { TransportRoute, TransportStation } from '@/types';
-import { colors, mc, StyleProps, Styles } from '@/utils';
+import { mc, StyleProps } from '@/utils';
 import React, { FC } from 'react';
 
 import { ArrowDown, ArrowUp } from '../Icons';
@@ -11,50 +11,17 @@ interface Props extends StyleProps {
 }
 
 const StationPopupHeader: FC<Props> = ({ style, className, station, route }) => (
-  <div style={style} className={mc('flex flex-row justify-start items-center', className)}>
-    {route && <RouteCircle style={styles.circle} route={route} size={20} />}
-    <div style={styles.direction}>
+  <div style={style} className={mc('flex flex-row justify-start items-center text-gray-900', className)}>
+    {route && <RouteCircle className="mr-1" route={route} size={20} />}
+    <div className="mr-1 flex items-center">
       {station.directionForward ? (
-        <ArrowDown className="w-4 h-4" style={styles.iconDown} />
+        <ArrowDown className="w-4 h-4 text-blue-500" />
       ) : (
-        <ArrowUp className="w-4 h-4" style={styles.iconUp} />
+        <ArrowUp className="w-4 h-4 text-green-500" />
       )}
     </div>
-    <div style={styles.title} className="flex-1">
-      {station.name}
-    </div>
+    <div className="flex-1 font-semibold text-sm">{station.name}</div>
   </div>
 );
-
-const styles: Styles = {
-  circle: {
-    marginRight: 3,
-  },
-  direction: {
-    fontSize: '20px',
-    marginRight: 3,
-    fontWeight: 'bold',
-  },
-  iconUp: {
-    color: colors.green,
-  },
-  iconDown: {
-    color: colors.blue,
-  },
-  title: {
-    fontWeight: 'bold',
-  },
-  loading: {
-    marginTop: 6,
-    height: 20,
-    overflow: 'hidden',
-  },
-  predictions: {
-    marginTop: 6,
-  },
-  err: {
-    marginTop: 3,
-  },
-};
 
 export default StationPopupHeader;

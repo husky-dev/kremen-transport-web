@@ -10,9 +10,22 @@ interface Props extends StyleProps {
 }
 
 export const BusPopup: FC<Props> = ({ className, style, bus, route }) => (
-  <div className={mc('flex flex-row items-center justify-start', className)} style={style}>
-    {!!route && <RouteCircle className="mr-2" route={route} size={20} />}
-    <div className={mc('flex-1', 'text-xs font-semibold')}>{bus.name}</div>
+  <div className={mc('flex flex-col gap-0.5 min-w-[120px] text-gray-900', className)} style={style}>
+    <div className="flex flex-row items-center gap-2">
+      {!!route && <RouteCircle route={route} size={20} />}
+      <div className="flex-1 text-xs font-semibold">{bus.name}</div>
+    </div>
+    {(bus.speed > 0 || bus.offline) && (
+      <div className="flex flex-row items-center gap-2 pl-0.5">
+        {bus.speed > 0 && (
+          <span className="text-xs text-gray-500">
+            {Math.round(bus.speed)}
+            {' км/год'}
+          </span>
+        )}
+        {bus.offline && <span className="badge badge-xs badge-warning">{'офлайн'}</span>}
+      </div>
+    )}
   </div>
 );
 

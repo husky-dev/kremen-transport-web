@@ -1,9 +1,7 @@
-/* eslint-disable react/no-array-index-key */
-
 import { findRouteWithId } from '@/core/transport';
 import React, { FC } from 'react';
 
-import { ms, sortBy, StyleProps, Styles } from '@/utils';
+import { sortBy, StyleProps } from '@/utils';
 import { TransportPrediction, TransportRoute, TransportStation } from '@/types';
 import RouteCircle from './RouteCircle';
 
@@ -21,66 +19,31 @@ const numToTimeStr = (val: number): { numStr: string; metric: string } => {
   return { numStr: `${mins}`, metric: 'хв' };
 };
 
-const getItemsSplitByRows = (items: TransportPrediction[]): TransportPrediction[][] => {
-  const rows: TransportPrediction[][] = [[]];
-  items.forEach((item, index) => {
-    if (index % 2 === 0) {
-      rows.push([]);
-    }
-    rows[rows.length - 1].push(item);
-  });
-  return rows;
-};
-
-export const StationPredictionsList: FC<Props> = ({ style, predictions: predictionsRaw, station, routes }) => {
+export const StationPredictionsList: FC<Props> = ({ className, predictions: predictionsRaw, station, routes }) => {
   const stationPrediction = predictionsRaw.filter(item => item.reverse !== station.directionForward);
   const predictions = sortBy(stationPrediction, 'prediction');
 
-  const renderPrediction = (item: TransportPrediction, index: number) => {
-    const route = findRouteWithId(routes, item.rid);
-    if (!route) {
-      return null;
-    }
-    const { numStr, metric } = numToTimeStr(item.prediction);
-    return (
-      <div key={index} style={styles.item} className="flex flex-row items-center">
-        <RouteCircle style={styles.rowCircle} route={route} size={20} />
-        <div style={styles.rowVal} className="flex flex-row items-center">
-          {`${numStr} ${metric}.`}
-        </div>
-      </div>
-    );
-  };
-
-  const rows: TransportPrediction[][] = getItemsSplitByRows(predictions);
-
   return (
-    <div style={ms(styles.container, style)}>
-      {rows.map((row, index) => (
-        <div key={index} style={ms(styles.row, index !== 0 && styles.rowIndent)} className="flex flex-row items-center">
-          {row.map(renderPrediction)}
-        </div>
-      ))}
+    <div className={`grid grid-cols-2 gap-x-3 gap-y-1 ${className ?? ''}`}>
+      {predictions.map(item => {
+        const route = findRouteWithId(routes, item.rid);
+        if (!route) return null;
+        const { numStr, metric } = numToTimeStr(item.prediction);
+        return (
+          <div key={item.tid} className="flex flex-row items-center gap-1.5">
+            <RouteCircle route={route} size={18} />
+            <div className="flex flex-row items-center">
+              <span className="font-semibold tabular-nums">{numStr}</span>
+              <span className="text-xs text-gray-500 ml-0.5">
+                {metric}
+                {'.'}
+              </span>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
-};
-
-const styles: Styles = {
-  container: {},
-  row: {},
-  rowCircle: {
-    marginRight: 5,
-  },
-  rowVal: {
-    flex: 1,
-    textAlign: 'left',
-  },
-  rowIndent: {
-    marginTop: 3,
-  },
-  item: {
-    flex: 1,
-  },
 };
 
 export default StationPredictionsList;

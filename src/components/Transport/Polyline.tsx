@@ -71,9 +71,6 @@ function usePolyline(props: PolylineProps) {
 
   // attach and re-attach event-handlers when any of the properties change
   useEffect(() => {
-     
-    if (!polyline) return;
-
     // Add event listeners
     const gme = google.maps.event;
     [

@@ -5,9 +5,11 @@ import { Bars3Icon } from '@heroicons/react/24/outline';
 import { routes } from '@/pages/routes';
 import { Link } from 'react-router-dom';
 
-type Props = StyleProps & TestIdProps;
+interface Props extends StyleProps, TestIdProps {
+  readonly activeBusCount?: number;
+}
 
-export const NavBar: FC<Props> = ({ testId, className, style }) => {
+export const NavBar: FC<Props> = ({ testId, className, style, activeBusCount }) => {
   return (
     <div data-testid={testId} className={mc('navbar bg-base-100', className)} style={style}>
       <div className="flex-none">
@@ -29,7 +31,12 @@ export const NavBar: FC<Props> = ({ testId, className, style }) => {
         </div>
       </div>
       <div className="flex-1">
-        <h1 className="text-xl font-medium px-2">{'#Кремінь.Транспорт'}</h1>
+        <div className="flex items-center gap-2">
+          <h1 className="text-xl font-medium px-2">{'#Кремінь.Транспорт'}</h1>
+          {activeBusCount !== undefined && activeBusCount > 0 && (
+            <span className="badge badge-primary badge-sm tabular-nums">{activeBusCount}</span>
+          )}
+        </div>
       </div>
       <div className="flex-none">
         <ThemeSwitchBtn className="btn btn-square btn-ghost" />
