@@ -1,6 +1,6 @@
 {
   "name": "kremen-transport-web",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "author": "Jaroslav Khorishchenko <jaro@husky-dev.me>",
   "license": "MIT",
