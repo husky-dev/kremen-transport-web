@@ -25,7 +25,7 @@ export const RoutesPanel: FC<Props> = ({ style, className, routes, selected, act
         <div className="flex items-center gap-2">
           <span className="font-semibold text-base">{'#Кремінь.Транспорт'}</span>
           {activeBusCount !== undefined && activeBusCount > 0 && (
-            <span className="badge badge-primary badge-sm tabular-nums">{activeBusCount}</span>
+            <span className="badge badge-outline badge-sm tabular-nums">{activeBusCount}</span>
           )}
         </div>
         <ThemeSwitchBtn className="btn btn-square btn-ghost btn-sm" />
@@ -53,10 +53,10 @@ export const RoutesPanel: FC<Props> = ({ style, className, routes, selected, act
         </div>
       </div>
       <div className="flex flex-row gap-4 px-3 py-2 border-t border-base-300">
-        <Link to={appRoutes.about} className="text-xs text-base-content/60 hover:text-base-content transition-colors">
+        <Link to={appRoutes.about} className="text-xs text-base-content/70 hover:text-base-content transition-colors">
           {'Про додаток'}
         </Link>
-        <Link to={appRoutes.privacy} className="text-xs text-base-content/60 hover:text-base-content transition-colors">
+        <Link to={appRoutes.privacy} className="text-xs text-base-content/70 hover:text-base-content transition-colors">
           {'Політика конфіденційності'}
         </Link>
       </div>

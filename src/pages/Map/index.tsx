@@ -287,7 +287,7 @@ export const MapPage: FC<Props> = () => {
       <div className="absolute bottom-6 right-4 z-10 flex flex-col gap-2">
         <button
           type="button"
-          className="btn btn-square btn-sm bg-base-100 border-base-300 shadow hover:bg-base-200"
+          className="btn btn-square btn-sm bg-base-100 border border-base-300 shadow-md hover:bg-base-200"
           onClick={() => map?.setZoom((map.getZoom() ?? 14) + 1)}
           aria-label="Збільшити"
         >
@@ -295,7 +295,7 @@ export const MapPage: FC<Props> = () => {
         </button>
         <button
           type="button"
-          className="btn btn-square btn-sm bg-base-100 border-base-300 shadow hover:bg-base-200"
+          className="btn btn-square btn-sm bg-base-100 border border-base-300 shadow-md hover:bg-base-200"
           onClick={() => map?.setZoom((map.getZoom() ?? 14) - 1)}
           aria-label="Зменшити"
         >

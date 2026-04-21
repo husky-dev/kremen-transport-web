@@ -27,6 +27,7 @@ const getStyles = (color: string = colors.red): Styles => ({
     cursor: 'pointer',
     boxSizing: 'border-box',
     border: `3px solid ${color}`,
+    backgroundColor: colors.withAlpha(color, 0.12),
     userSelect: 'none',
   },
   sqr: {
