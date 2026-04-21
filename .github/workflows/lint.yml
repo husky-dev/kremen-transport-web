@@ -10,5 +10,5 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: 'lts/*'
-    - run: yarn
-    - run: yarn lint
+    - run: npm install
+    - run: npm run lint
