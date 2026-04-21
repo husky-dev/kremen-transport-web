@@ -4,8 +4,8 @@ import { mc, StyleProps, TestIdProps } from '@/utils';
 import React, { FC } from 'react';
 
 interface Props extends StyleProps, TestIdProps {
-  title: string;
-  content: string;
+  readonly title: string;
+  readonly content: string;
 }
 
 export const ContentPage: FC<Props> = ({ testId, className, style, title, content }) => {

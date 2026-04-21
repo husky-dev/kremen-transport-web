@@ -6,10 +6,10 @@ import RouteSelectItem from './RouteSelectItem';
 import { FormColoredCheckbox } from '../Forms';
 
 interface Props extends StyleProps {
-  title: string;
-  routes: TransportRoute[];
-  selected: number[];
-  onSelectedChange: (selected: number[]) => void;
+  readonly title: string;
+  readonly routes: TransportRoute[];
+  readonly selected: number[];
+  readonly onSelectedChange: (selected: number[]) => void;
 }
 
 export const RouteSelectGroup: FC<Props> = ({ style, className, routes, selected, title, onSelectedChange }) => {

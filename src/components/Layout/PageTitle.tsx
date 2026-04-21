@@ -2,12 +2,12 @@
 import React, { FC, useEffect } from 'react';
 
 interface Props {
-  title?: string;
+  readonly title?: string;
 }
 
 export const PageTitle: FC<Props> = ({ title }) => {
   useEffect(() => {
-    document.title = title ? `${title} | #Kremen.Dev` : '#Kremen.Dev';
+    document.title = title ? `${title} | #Husky.Dev` : '#Husky.Dev';
   }, [title]);
   return null;
 };

@@ -2,10 +2,10 @@ import React, { FC, SyntheticEvent } from 'react';
 import { colors, ms, Styles, StyleProps, mc } from '@/utils';
 
 interface Props extends StyleProps {
-  size?: number;
-  color?: string;
-  checked?: boolean;
-  onChange: (val: boolean) => void;
+  readonly size?: number;
+  readonly color?: string;
+  readonly checked?: boolean;
+  readonly onChange: (val: boolean) => void;
 }
 
 export const FormColoredCheckbox: FC<Props> = ({ className, style, checked, color, size = 20, onChange }) => {

@@ -5,8 +5,8 @@ import React, { FC } from 'react';
 import RouteCircle from './RouteCircle';
 
 interface Props extends StyleProps {
-  bus: TransportBus;
-  route?: TransportRoute;
+  readonly bus: TransportBus;
+  readonly route?: TransportRoute;
 }
 
 export const BusPopup: FC<Props> = ({ className, style, bus, route }) => (

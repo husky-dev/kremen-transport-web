@@ -1,6 +1,9 @@
 import { JestConfigWithTsJest, pathsToModuleNameMapper } from 'ts-jest';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
-import { compilerOptions } from './tsconfig.json';
+const tsconfig = JSON.parse(readFileSync(join(__dirname, 'tsconfig.json'), 'utf8'));
+const compilerOptions = tsconfig.compilerOptions;
 
 const jestConfig: JestConfigWithTsJest = {
   preset: 'ts-jest',
@@ -26,7 +29,7 @@ const jestConfig: JestConfigWithTsJest = {
   ],
   coveragePathIgnorePatterns: ['./src/*/types.{ts,tsx}', './src/index.tsx', './src/serviceWorker.ts', './src/setupTests.ts'],
   // setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
-  modulePaths: [compilerOptions.baseUrl],
+  modulePaths: compilerOptions.baseUrl ? [compilerOptions.baseUrl] : [],
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/' }),
 };
 

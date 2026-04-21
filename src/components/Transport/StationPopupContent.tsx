@@ -9,8 +9,8 @@ import StationPredictionsList from './StationPredictionsList';
 const log = Log('StationPopup');
 
 interface Props extends StyleProps {
-  routes: TransportRoute[];
-  station: TransportStation;
+  readonly routes: TransportRoute[];
+  readonly station: TransportStation;
 }
 
 const usePredictions = (sid: number) => {

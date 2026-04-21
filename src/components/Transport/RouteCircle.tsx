@@ -4,8 +4,8 @@ import { colors, ColorsSet, ms, StyleProps, Styles } from '@/utils';
 import React, { FC } from 'react';
 
 interface Props extends StyleProps {
-  route: TransportRoute;
-  size?: number;
+  readonly route: TransportRoute;
+  readonly size?: number;
 }
 
 export const RouteCircle: FC<Props> = ({ className, style, route, size }) => {

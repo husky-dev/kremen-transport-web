@@ -6,8 +6,8 @@ import { ArrowDown, ArrowUp } from '../Icons';
 import RouteCircle from './RouteCircle';
 
 interface Props extends StyleProps {
-  station: TransportStation;
-  route?: TransportRoute;
+  readonly station: TransportStation;
+  readonly route?: TransportRoute;
 }
 
 const StationPopupHeader: FC<Props> = ({ style, className, station, route }) => (

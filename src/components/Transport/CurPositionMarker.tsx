@@ -4,12 +4,12 @@ import { LatLng, colorSetFromColor, colors } from '@/utils';
 import { Marker } from '@vis.gl/react-google-maps';
 
 interface Props {
-  position: LatLng;
-  title?: string;
-  size?: number;
-  opacity?: number;
-  zIndex?: number;
-  onClick?: () => void;
+  readonly position: LatLng;
+  readonly title?: string;
+  readonly size?: number;
+  readonly opacity?: number;
+  readonly zIndex?: number;
+  readonly onClick?: () => void;
 }
 
 export const CurPositionMarker: FC<Props> = ({ position, opacity = 1.0, zIndex = 1, size = 38, title, onClick }) => {

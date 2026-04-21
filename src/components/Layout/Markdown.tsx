@@ -5,8 +5,8 @@ import { marked } from 'marked';
 import React, { FC, useEffect, useState } from 'react';
 
 interface Props extends StyleProps, TestIdProps {
-  content?: string;
-  prose?: boolean;
+  readonly content?: string;
+  readonly prose?: boolean;
 }
 
 export const Markdown: FC<Props> = ({ testId, className, style, content, prose = false }) => {

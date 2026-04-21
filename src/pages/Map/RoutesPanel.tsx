@@ -6,9 +6,9 @@ import { compact, groupBy, mc, ms, StyleProps } from '@/utils';
 import React, { FC } from 'react';
 
 interface Props extends StyleProps {
-  routes: TransportRoute[];
-  selected: number[];
-  onSelectedChange: (selected: number[]) => void;
+  readonly routes: TransportRoute[];
+  readonly selected: number[];
+  readonly onSelectedChange: (selected: number[]) => void;
 }
 
 export const RoutesPanel: FC<Props> = ({ style, className, routes, selected, onSelectedChange }) => {

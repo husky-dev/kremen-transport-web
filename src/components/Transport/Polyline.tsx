@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 import { forwardRef, useContext, useEffect, useImperativeHandle, useMemo, useRef } from 'react';
 
 import { GoogleMapsContext, useMapsLibrary } from '@vis.gl/react-google-maps';
@@ -6,19 +5,19 @@ import { GoogleMapsContext, useMapsLibrary } from '@vis.gl/react-google-maps';
 import type { Ref } from 'react';
 
 type PolylineEventProps = {
-  onClick?: (e: google.maps.MapMouseEvent) => void;
-  onDrag?: (e: google.maps.MapMouseEvent) => void;
-  onDragStart?: (e: google.maps.MapMouseEvent) => void;
-  onDragEnd?: (e: google.maps.MapMouseEvent) => void;
-  onMouseOver?: (e: google.maps.MapMouseEvent) => void;
-  onMouseOut?: (e: google.maps.MapMouseEvent) => void;
+  readonly onClick?: (e: google.maps.MapMouseEvent) => void;
+  readonly onDrag?: (e: google.maps.MapMouseEvent) => void;
+  readonly onDragStart?: (e: google.maps.MapMouseEvent) => void;
+  readonly onDragEnd?: (e: google.maps.MapMouseEvent) => void;
+  readonly onMouseOver?: (e: google.maps.MapMouseEvent) => void;
+  readonly onMouseOut?: (e: google.maps.MapMouseEvent) => void;
 };
 
 type PolylineCustomProps = {
   /**
    * this is an encoded string for the path, will be decoded and used as a path
    */
-  encodedPath?: string;
+  readonly encodedPath?: string;
 };
 
 export type PolylineProps = google.maps.PolylineOptions & PolylineEventProps & PolylineCustomProps;
@@ -72,7 +71,7 @@ function usePolyline(props: PolylineProps) {
 
   // attach and re-attach event-handlers when any of the properties change
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+     
     if (!polyline) return;
 
     // Add event listeners
@@ -103,7 +102,7 @@ function usePolyline(props: PolylineProps) {
 /**
  * Component to render a polyline on a map
  */
-// eslint-disable-next-line react/display-name
+
 export const Polyline = forwardRef((props: PolylineProps, ref: PolylineRef) => {
   const polyline = usePolyline(props);
 

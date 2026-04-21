@@ -3,8 +3,8 @@ const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
 const http = require('http');
-const postCssPlugin = require('./tools/postcss-plugin.js');
-const tailwindPlugin = require('tailwindcss');
+const postCssPlugin = require('./tools/postcssPlugin.js');
+const tailwindPlugin = require('@tailwindcss/postcss');
 const tailwindConfig = require('./tailwind.config.js');
 const autoprefixer = require('autoprefixer');
 
@@ -143,11 +143,49 @@ const isFileExtensionInList = (filePath, extensions) => {
 /* Template */
 
 const getTemplateHtml = (opt) => {
-  let html = fs.readFileSync(templateFilePath, 'utf8');
-  if (opt.title) html = html.replace(/<title>.*<\/title>/, `<title>${opt.title}</title>`);
-  if (opt.description) html = html.replace(/<meta name="description" content=".*">/, `<meta name="description" content="${opt.description}">`);
-  if (opt.cssFilePath) html = html.replace(/<link rel="stylesheet" href="\/app.css">/, `<link rel="stylesheet" href="${opt.cssFilePath}">`);
-  if (opt.jsFilePath) html = html.replace(/<script src="\/app.js"><\/script>/, `<script src="${opt.jsFilePath}"></script>`);
+  let html = '';
+  html += `<!DOCTYPE html>`;
+  html += `<html lang="en">`;
+  html += `<head>`;
+  html += `  <meta charset="UTF-8">`;
+  html += `  <title>${opt.title || 'Громадський транспорт Кременчука | #Husky.Dev'}</title>`;
+  html += `  <meta name="viewport" content="width=device-width, initial-scale=1">`; 
+  html += `  <meta name=description content="${opt.description || 'Карта руху громадського транспорту Кременчука'}"/>`;
+  html += `  <meta name="keywords" content="кременчук, автобуси, маршрутки, тролейбуси, громадський транспорт, розклад, карта, мапа" />`;
+  html += `  <meta property="og:type" content="website" />`;
+  html += `  <meta property="og:title" content="${opt.title || 'Громадський транспорт Кременчука | #Husky.Dev'}"/>`;
+  html += `  <meta property="og:description" content="${opt.description || 'Карта руху громадського транспорту Кременчука'}"/>`;
+  html += `  <meta property="og:url" content="https://transport.Husky.Dev"/>`;
+  html += `  <meta property="og:site_name" content="${opt.name || 'Громадський транспорт Кременчука'}"/>`;
+  html += `  <meta property="og:image" content="/banner.png?v=4"/>`;
+  html += `  <meta name="apple-itunes-app" content="app-id=1600469756">`;
+  html += `  <!-- Favicons -->`;
+  html += `  <link rel="shortcut icon" href="/favicon-32.png?v=4">`;
+  html += `  <link rel="apple-touch-icon" href="/favicon-180.png?v=4">`;
+  html += `  <!-- Fonts -->`;
+  html += `  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" />`;
+  html += `  <!-- Theme -->`;
+  html += `  <meta name=theme-color content="#ffffff">`;
+  html += `  <meta name=msapplication-TileColor content="#ffffff">`;
+  html += `  <!-- Styles -->`;
+  html += `  <link rel="stylesheet" href="${opt.cssFilePath || '/app.css'}">`;
+  html += `  <!-- Global site tag (gtag.js) - Google Analytics -->`;
+  html += `  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-77334417-5"></script>`;
+  html += `  <script>`;
+  html += `  window.dataLayer = window.dataLayer || [];`;
+  html += `  function gtag(){dataLayer.push(arguments);}`;
+  html += `  gtag('js', new Date());`;
+  html += `  gtag('config', 'UA-77334417-5');`;
+  html += `  </script>`;
+  html += `  <!-- Cloudflare Web Analytics -->`;
+  html += `  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "f902fd19884543e49fa503ea5f2f164f"}'></script>`;
+  html += `  <!-- End Cloudflare Web Analytics -->`;
+  html += `</head>`;
+  html += `<body class="h-screen">`;
+  html += `  <div id="app"></div>`;
+  html += `  <script src="${opt.jsFilePath || '/app.js'}"></script>`;
+  html += `</body>`;
+  html += `</html>`;
   return html;
 };
 

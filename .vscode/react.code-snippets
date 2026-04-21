@@ -4,8 +4,7 @@
       "tsrfc"
     ],
     "body": [
-      "import { mc, StyleProps } from '@/styles';",
-      "import { TestIdProps } from '@/utils';",
+      "import { mc, StyleProps, TestIdProps } from '@/utils';",
       "import React, { FC } from 'react';",
       "",
       "type Props = StyleProps & TestIdProps;",
@@ -25,5 +24,75 @@
     ],
     "description": "Insert functional component",
     "scope": "typescript,typescriptreact"
+  },
+  "tsrfcs": {
+    "prefix": [
+      "tsrfcs"
+    ],
+    "body": [
+      "import { mc, StyleProps, TestIdProps } from '@/utils';",
+      "import React, { FC } from 'react';",
+      "",
+      "type Props = StyleProps & TestIdProps;",
+      "// interface Props extends StyleProps, TestIdProps {",
+      "//   ",
+      "// }",
+      "",
+      "export const $1: FC<Props> = ({ testId, className, style }) => (",
+      "  <div data-testid={testId} className={mc(className)} style={style}>",
+      "    $0",
+      "  </div>",
+      ");",
+      "",
+      "export default $1;"
+    ],
+    "description": "Insert functional component simple version",
+    "scope": "typescriptreact"
+  },
+  "tsrip": {
+    "prefix": [
+      "tsrip"
+    ],
+    "body": [
+      "interface Props {",
+      "  $0",
+      "}"
+    ],
+    "description": "Props",
+    "scope": "typescriptreact"
+  },
+  "tsrus": {
+    "prefix": [
+      "tsrus"
+    ],
+    "body": [
+      "const [${1:name}, set${1/(.)(.*)/${1:/upcase}${2}/}] = useState<${3|boolean,boolean \\| undefined,string,string \\| undefined,number,number \\| undefined,undefined|}>($0);"
+    ],
+    "description": "Insert useState",
+    "scope": "typescriptreact"
+  },
+  "tsrue": {
+    "prefix": [
+      "tsrue"
+    ],
+    "body": [
+      "useEffect(() => {",
+      "  $0",
+      "}, [$1]);"
+    ],
+    "description": "Insert useEffect",
+    "scope": "typescriptreact"
+  },
+  "tsrh": {
+    "prefix": [
+      "tsrh"
+    ],
+    "body": [
+      "const handle$1 = ($2) => {",
+      "  $0",
+      "};"
+    ],
+    "description": "Insert handler",
+    "scope": "typescriptreact"
   }
 }

@@ -5,19 +5,19 @@ import React, { FC, MouseEventHandler } from 'react';
 import { Link } from 'react-router-dom';
 
 interface Props extends StyleProps, TestIdProps {
-  color?: FormControlColor;
-  size?: 'xs' | 'sm' | 'md' | 'lg';
-  icon: IconBtnIcon;
-  type?: 'submit' | 'reset' | 'button';
-  active?: boolean;
-  round?: boolean;
-  square?: boolean;
-  processing?: boolean;
-  disabled?: boolean;
-  tooltip?: string;
-  to?: string;
-  state?: unknown;
-  onClick?: MouseEventHandler<HTMLButtonElement | HTMLAnchorElement>;
+  readonly color?: FormControlColor;
+  readonly size?: 'xs' | 'sm' | 'md' | 'lg';
+  readonly icon: IconBtnIcon;
+  readonly type?: 'submit' | 'reset' | 'button';
+  readonly active?: boolean;
+  readonly round?: boolean;
+  readonly square?: boolean;
+  readonly processing?: boolean;
+  readonly disabled?: boolean;
+  readonly tooltip?: string;
+  readonly to?: string;
+  readonly state?: unknown;
+  readonly onClick?: MouseEventHandler<HTMLButtonElement | HTMLAnchorElement>;
 }
 
 type FormControlColor = 'primary' | 'secondary' | 'accent' | 'warning' | 'success' | 'error' | 'info' | 'neutral';

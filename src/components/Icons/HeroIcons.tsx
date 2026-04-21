@@ -2,9 +2,6 @@ import { StyleProps, TestIdProps } from '@/utils';
 import React, { FC } from 'react';
 
 type Props = StyleProps & TestIdProps;
-// interface Props extends StyleProps, TestIdProps {
-//
-// }
 
 const propsToSvgProps = ({ testId, className, style }: Props) => ({
   'data-testid': testId,

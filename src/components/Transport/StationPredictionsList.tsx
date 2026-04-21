@@ -8,9 +8,9 @@ import { TransportPrediction, TransportRoute, TransportStation } from '@/types';
 import RouteCircle from './RouteCircle';
 
 interface Props extends StyleProps {
-  routes: TransportRoute[];
-  station: TransportStation;
-  predictions: TransportPrediction[];
+  readonly routes: TransportRoute[];
+  readonly station: TransportStation;
+  readonly predictions: TransportPrediction[];
 }
 
 const numToTimeStr = (val: number): { numStr: string; metric: string } => {

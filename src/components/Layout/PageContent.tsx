@@ -2,11 +2,11 @@ import { mc, StyleProps, TestIdProps } from '@/utils';
 import React, { FC, PropsWithChildren, ReactElement, ReactNode } from 'react';
 
 interface Props extends StyleProps, TestIdProps, PropsWithChildren {
-  contentClassName?: string;
-  title?: string | ReactNode | ReactElement;
-  backgroundColor?: 'bg-base-100' | 'bg-base-200' | 'bg-base-300';
-  renderHeaderRight?: () => ReactNode;
-  renderSubheader?: () => ReactNode;
+  readonly contentClassName?: string;
+  readonly title?: string | ReactNode | ReactElement;
+  readonly backgroundColor?: 'bg-base-100' | 'bg-base-200' | 'bg-base-300';
+  readonly renderHeaderRight?: () => ReactNode;
+  readonly renderSubheader?: () => ReactNode;
 }
 
 export const PageContent: FC<Props> = ({
