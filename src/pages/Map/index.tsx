@@ -284,7 +284,10 @@ export const MapPage: FC<Props> = () => {
         {curStations.map(renderStationMarker)}
         {!!curPosition && <CurPositionMarker size={mapMarkerSize} position={curPosition} onClick={hanldePositionMarkerClick} />}
       </Map>
-      <div className="absolute bottom-6 right-4 z-10 flex flex-col gap-2">
+      <div
+        className="absolute right-4 z-10 flex flex-col gap-2"
+        style={{ bottom: 'max(1.5rem, calc(env(safe-area-inset-bottom) + 0.5rem))' }}
+      >
         <button
           type="button"
           className="btn btn-square btn-sm bg-base-100 border border-base-300 shadow-md hover:bg-base-200"
@@ -315,7 +318,7 @@ export const MapPage: FC<Props> = () => {
           </button>
         )}
       </div>
-      <div className={mc('absolute top-2 left-0 w-full sm:w-auto', 'px-2')}>
+      <div className={mc('absolute left-0 w-full sm:w-auto', 'px-2')} style={{ top: 'max(0.5rem, env(safe-area-inset-top))' }}>
         <RoutesPanel
           className={mc('w-full sm:w-72')}
           routes={routes}

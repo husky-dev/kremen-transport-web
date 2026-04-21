@@ -149,7 +149,7 @@ const getTemplateHtml = (opt) => {
   html += `<head>`;
   html += `  <meta charset="UTF-8">`;
   html += `  <title>${opt.title || 'Громадський транспорт Кременчука | #Husky.Dev'}</title>`;
-  html += `  <meta name="viewport" content="width=device-width, initial-scale=1">`; 
+  html += `  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">`; 
   html += `  <meta name=description content="${opt.description || 'Карта руху громадського транспорту Кременчука'}"/>`;
   html += `  <meta name="keywords" content="кременчук, автобуси, маршрутки, тролейбуси, громадський транспорт, розклад, карта, мапа" />`;
   html += `  <meta property="og:type" content="website" />`;
@@ -181,7 +181,7 @@ const getTemplateHtml = (opt) => {
   html += `  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "f902fd19884543e49fa503ea5f2f164f"}'></script>`;
   html += `  <!-- End Cloudflare Web Analytics -->`;
   html += `</head>`;
-  html += `<body class="h-screen">`;
+  html += `<body class="h-dvh">`;
   html += `  <div id="app"></div>`;
   html += `  <script src="${opt.jsFilePath || '/app.js'}"></script>`;
   html += `</body>`;
