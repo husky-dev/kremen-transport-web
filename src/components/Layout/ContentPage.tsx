@@ -17,7 +17,7 @@ export const ContentPage: FC<Props> = ({ testId, className, style, title, conten
           className="w-full max-w-3xl"
           title={
             <div className={mc('flex flex-row items-center', 'space-x-2')}>
-              <IconBtn square icon="chevron-left" color="neutral" to="/" />
+              <IconBtn square icon="chevron-left" color="ghost" className="border border-base-content/25" to="/" />
               <div>{title}</div>
             </div>
           }

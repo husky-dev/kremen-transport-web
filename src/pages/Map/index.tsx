@@ -1,5 +1,5 @@
-import { NavBar, PageTitle } from '@/components/Layout';
-import { MapPinIcon } from '@heroicons/react/24/outline';
+import { PageTitle } from '@/components/Layout';
+import { MapPinIcon, MinusIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { BusMarker, CurPositionMarker, RoutePath, StationMarker } from '@/components/Transport';
 import { api } from '@/core/api';
 import { Log } from '@/core/log';
@@ -65,6 +65,7 @@ export const MapPage: FC<Props> = () => {
   const [selectedRoutes, setSelectedRoutes] = useState<number[]>(selectedStorage.get() || defRids);
 
   const [curPosition, setCurPosition] = useState<LatLng | undefined>(undefined);
+  const [geoRequesting, setGeoRequesting] = useState(false);
 
   useEffect(() => {
     fullUpdate();
@@ -155,6 +156,7 @@ export const MapPage: FC<Props> = () => {
   }, []);
 
   const handlePositionErr = (err: GeolocationPositionError) => {
+    setGeoRequesting(false);
     if (err.code === 1) {
       log.info('user denied geolocation prompt');
       setCurPosition(undefined);
@@ -164,6 +166,7 @@ export const MapPage: FC<Props> = () => {
   };
 
   const handlePositionReceived = (rawVal: GeolocationPosition) => {
+    setGeoRequesting(false);
     log.debug('cur position firts received');
     const { latitude: lat, longitude: lng } = rawVal.coords;
     setCurPosition({ lat, lng });
@@ -178,8 +181,12 @@ export const MapPage: FC<Props> = () => {
 
   const hanldePositionMarkerClick = () => {
     log.info('cur position marker click');
-    if (!map || !curPosition) return;
-    map.setCenter(curPosition);
+    if (curPosition && map) {
+      map.setCenter(curPosition);
+    } else if (navigator.geolocation && !geoRequesting) {
+      setGeoRequesting(true);
+      navigator.geolocation.getCurrentPosition(handlePositionReceived, handlePositionErr);
+    }
   };
 
   // Render
@@ -250,7 +257,6 @@ export const MapPage: FC<Props> = () => {
   return (
     <>
       <PageTitle title="Громадський транспорт Кременчука" />
-      <NavBar className="absolute left-0 top-0 right-0 z-10" activeBusCount={curBuses.length} />
       <Map
         className="absolute left-0 top-0 right-0 bottom-0 overflow-hidden z-0"
         id="routes-map"
@@ -267,9 +273,7 @@ export const MapPage: FC<Props> = () => {
         reuseMaps
         defaultCenter={centerStorage.get() || coordinates.kremen}
         defaultZoom={zoomStorage.get() || 14}
-        fullscreenControl={false}
-        mapTypeControl={false}
-        streetViewControl={false}
+        disableDefaultUI
         gestureHandling="greedy"
         onCenterChanged={e => centerStorage.set(e.detail.center)}
         onZoomChanged={e => zoomStorage.set(e.detail.zoom)}
@@ -280,21 +284,43 @@ export const MapPage: FC<Props> = () => {
         {curStations.map(renderStationMarker)}
         {!!curPosition && <CurPositionMarker size={mapMarkerSize} position={curPosition} onClick={hanldePositionMarkerClick} />}
       </Map>
-      {curPosition && (
+      <div className="absolute bottom-6 right-4 z-10 flex flex-col gap-2">
         <button
           type="button"
-          className="absolute bottom-6 right-4 z-10 btn btn-circle btn-primary shadow-lg"
-          onClick={hanldePositionMarkerClick}
-          aria-label="Моє місцезнаходження"
+          className="btn btn-square btn-sm bg-base-100 border-base-300 shadow hover:bg-base-200"
+          onClick={() => map?.setZoom((map.getZoom() ?? 14) + 1)}
+          aria-label="Збільшити"
         >
-          <MapPinIcon className="w-5 h-5" />
+          <PlusIcon className="w-4 h-4" />
         </button>
-      )}
-      <div className={mc('absolute top-[72px] left-0 w-full sm:w-auto', 'px-2')}>
+        <button
+          type="button"
+          className="btn btn-square btn-sm bg-base-100 border-base-300 shadow hover:bg-base-200"
+          onClick={() => map?.setZoom((map.getZoom() ?? 14) - 1)}
+          aria-label="Зменшити"
+        >
+          <MinusIcon className="w-4 h-4" />
+        </button>
+        {navigator.geolocation && (
+          <button
+            type="button"
+            className={mc(
+              'btn btn-square btn-sm bg-base-100 border-base-300 shadow hover:bg-base-200',
+              !curPosition && !geoRequesting && 'opacity-50',
+            )}
+            onClick={hanldePositionMarkerClick}
+            aria-label="Моє місцезнаходження"
+          >
+            {geoRequesting ? <span className="loading loading-spinner loading-xs" /> : <MapPinIcon className="w-4 h-4" />}
+          </button>
+        )}
+      </div>
+      <div className={mc('absolute top-2 left-0 w-full sm:w-auto', 'px-2')}>
         <RoutesPanel
           className={mc('w-full sm:w-72')}
           routes={routes}
           selected={selectedRoutes}
+          activeBusCount={curBuses.length}
           onSelectedChange={handleDisplayedRoutesChange}
         />
       </div>

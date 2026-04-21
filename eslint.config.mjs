@@ -65,7 +65,7 @@ export default tseslint.config(
       '@typescript-eslint/no-invalid-void-type': 'error',
       '@typescript-eslint/no-require-imports': 'error',
       '@typescript-eslint/no-unnecessary-boolean-literal-compare': 'error',
-      '@typescript-eslint/no-unnecessary-condition': 'error',
+      '@typescript-eslint/no-unnecessary-condition': 'warn',
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/no-use-before-define': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',

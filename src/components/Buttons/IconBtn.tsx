@@ -20,7 +20,7 @@ interface Props extends StyleProps, TestIdProps {
   readonly onClick?: MouseEventHandler<HTMLButtonElement | HTMLAnchorElement>;
 }
 
-type FormControlColor = 'primary' | 'secondary' | 'accent' | 'warning' | 'success' | 'error' | 'info' | 'neutral';
+type FormControlColor = 'primary' | 'secondary' | 'accent' | 'warning' | 'success' | 'error' | 'info' | 'neutral' | 'ghost';
 
 type IconBtnIcon =
   | 'x-mark'
@@ -67,7 +67,7 @@ export const IconBtn: FC<Props> = ({
     'btn',
     round && 'btn-circle',
     square && 'btn-square',
-    !active && 'btn-outline',
+    !active && color !== 'ghost' && 'btn-outline',
     disabled && 'btn-disabled',
     size === 'xs' && 'btn-xs',
     size === 'sm' && 'btn-sm',
@@ -81,6 +81,7 @@ export const IconBtn: FC<Props> = ({
     color === 'error' && 'btn-error',
     color === 'info' && 'btn-info',
     color === 'neutral' && 'btn-neutral',
+    color === 'ghost' && 'btn-ghost',
     className,
   );
   const iconClassName = mc(
