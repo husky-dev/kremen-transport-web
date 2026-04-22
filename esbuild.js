@@ -162,6 +162,7 @@ const getTemplateHtml = (opt) => {
   html += `  <!-- Favicons -->`;
   html += `  <link rel="shortcut icon" href="/favicon-32.png?v=4">`;
   html += `  <link rel="apple-touch-icon" href="/favicon-180.png?v=4">`;
+  html += `  <link rel="manifest" href="/manifest.json">`;
   html += `  <!-- Fonts -->`;
   html += `  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" />`;
   html += `  <!-- Theme -->`;

@@ -32,3 +32,7 @@ if (container) {
   const root = createRoot(container);
   root.render(<App />);
 }
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
