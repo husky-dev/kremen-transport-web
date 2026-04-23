@@ -285,9 +285,22 @@ export const MapPage: FC<Props> = () => {
         {!!curPosition && <CurPositionMarker size={mapMarkerSize} position={curPosition} onClick={hanldePositionMarkerClick} />}
       </Map>
       <div
-        className="absolute right-4 z-10 flex flex-col gap-2"
+        className="absolute right-4 z-20 flex flex-col gap-2"
         style={{ bottom: 'max(1.5rem, calc(env(safe-area-inset-bottom) + 0.5rem))' }}
       >
+        {navigator.geolocation && (
+          <button
+            type="button"
+            className={mc(
+              'btn btn-square btn-sm bg-base-100 border-base-300 shadow hover:bg-base-200',
+              !curPosition && !geoRequesting && 'opacity-50',
+            )}
+            onClick={hanldePositionMarkerClick}
+            aria-label="Моє місцезнаходження"
+          >
+            {geoRequesting ? <span className="loading loading-spinner loading-xs" /> : <MapPinIcon className="w-4 h-4" />}
+          </button>
+        )}
         <button
           type="button"
           className="btn btn-square btn-sm bg-base-100 border border-base-300 shadow-md hover:bg-base-200"
@@ -304,21 +317,11 @@ export const MapPage: FC<Props> = () => {
         >
           <MinusIcon className="w-4 h-4" />
         </button>
-        {navigator.geolocation && (
-          <button
-            type="button"
-            className={mc(
-              'btn btn-square btn-sm bg-base-100 border-base-300 shadow hover:bg-base-200',
-              !curPosition && !geoRequesting && 'opacity-50',
-            )}
-            onClick={hanldePositionMarkerClick}
-            aria-label="Моє місцезнаходження"
-          >
-            {geoRequesting ? <span className="loading loading-spinner loading-xs" /> : <MapPinIcon className="w-4 h-4" />}
-          </button>
-        )}
       </div>
-      <div className={mc('absolute left-0 w-full sm:w-auto', 'px-2')} style={{ top: 'max(0.5rem, env(safe-area-inset-top))' }}>
+      <div
+        className={mc('absolute z-30 left-0 w-full sm:w-auto', 'px-2')}
+        style={{ top: 'max(0.5rem, env(safe-area-inset-top))' }}
+      >
         <RoutesPanel
           className={mc('w-full sm:w-72')}
           routes={routes}
