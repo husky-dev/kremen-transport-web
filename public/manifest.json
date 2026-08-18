@@ -19,5 +19,13 @@
       "type": "image/png",
       "purpose": "any"
     }
-  ]
+  ],
+  "related_applications": [
+    {
+      "platform": "play",
+      "id": "com.krementransport",
+      "url": "https://play.google.com/store/apps/details?id=com.krementransport"
+    }
+  ],
+  "prefer_related_applications": true
 }
