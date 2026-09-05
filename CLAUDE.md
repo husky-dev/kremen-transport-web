@@ -11,16 +11,10 @@ Kremenchuk Public Transport — a React SPA that shows buses, trolleybuses, and 
 ```bash
 npm start          # Dev server (default port 8080, override with PORT or APP_PORT)
 npm run dist       # Production build → dist/
-npm run test       # Jest test suite
 npm run lint       # Type check + ESLint --fix + Prettier --write (all three)
 npm run lint:types # TypeScript type check only
 npm run lint:eslint # ESLint --fix only
 npm run lint:format # Prettier --write only
-```
-
-Run a single test file:
-```bash
-npx jest src/path/to/file.test.ts
 ```
 
 ## Architecture
