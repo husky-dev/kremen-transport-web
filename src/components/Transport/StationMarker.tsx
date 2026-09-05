@@ -11,6 +11,7 @@ interface Props {
   station: TransportStation;
   popupOpen?: boolean;
   size?: number;
+  compact?: boolean;
   route?: TransportRoute;
   selectedRoutes: number[];
   onClick?: (station: TransportStation) => void;
@@ -27,12 +28,24 @@ const getIconCode = (size: number) => {
   return `data:image/svg+xml;base64,${iconCode}`;
 };
 
+const DotSize = 8;
+
+const getDotIconCode = (size: number) => {
+  const iconCode = btoa(`
+  <svg width="${size}px" height="${size}px" viewBox="0 0 8 8" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="4" cy="4" r="3" fill="#3E7FE8" stroke="#FFFFFF" stroke-width="1.5"></circle>
+  </svg>
+  `);
+  return `data:image/svg+xml;base64,${iconCode}`;
+};
+
 export const StationMarker: FC<Props> = ({
   station,
   onClick,
   popupOpen,
   route,
   size = 20,
+  compact,
   routes,
   selectedRoutes,
   onPopupClose,
@@ -56,13 +69,21 @@ export const StationMarker: FC<Props> = ({
         <Marker
           ref={markerRef}
           position={{ lat, lng }}
-          title={station.name}
-          icon={{
-            url: getIconCode(size),
-            anchor: new google.maps.Point(Math.round(size / 2), Math.round(size / 2)),
-          }}
+          title={compact ? undefined : station.name}
+          icon={
+            compact
+              ? {
+                  url: getDotIconCode(DotSize),
+                  anchor: new google.maps.Point(Math.round(DotSize / 2), Math.round(DotSize / 2)),
+                }
+              : {
+                  url: getIconCode(size),
+                  anchor: new google.maps.Point(Math.round(size / 2), Math.round(size / 2)),
+                }
+          }
+          clickable={!compact}
           zIndex={10}
-          onClick={handleClick}
+          onClick={compact ? undefined : handleClick}
         />
         {popupOpen && (
           <InfoWindow
@@ -75,7 +96,7 @@ export const StationMarker: FC<Props> = ({
         )}
       </>
     ),
-    [lat, lng, popupOpen, selectedRoutes, size],
+    [lat, lng, popupOpen, selectedRoutes, size, compact],
   );
 };
 

@@ -35,6 +35,7 @@ type Props = StyleProps & TestIdProps;
 
 const mapMarkerSize = 46;
 const stationMarkerSize = Math.round(mapMarkerSize / 2.7);
+const StationIconMinZoom = 16;
 
 const busesStorage = getStorage({ key: 'kremen:buses', guard: isTransportBusArrOrUndef });
 const routesStorage = getStorage({ key: 'kremen:routes', guard: isTransportRouteArrOrUndef });
@@ -63,6 +64,8 @@ export const MapPage: FC<Props> = () => {
   const [selectedBus, setSelectedBus] = useState<TransportBus | undefined>(undefined);
   const [stationPopupId, setStationPopupId] = useState<number | undefined>(undefined);
   const [selectedRoutes, setSelectedRoutes] = useState<number[]>(selectedStorage.get() || defRids);
+
+  const [zoom, setZoom] = useState<number>(zoomStorage.get() || 14);
 
   const [curPosition, setCurPosition] = useState<LatLng | undefined>(undefined);
   const [geoRequesting, setGeoRequesting] = useState(false);
@@ -194,6 +197,7 @@ export const MapPage: FC<Props> = () => {
   const curRoutes = routes.filter(({ rid }) => selectedRoutes.includes(rid));
   const curBuses = buses.filter(({ rid }) => selectedRoutes.includes(rid));
   const curStations = routesToStatiosn(curRoutes);
+  const stationsCompact = zoom < StationIconMinZoom;
 
   const renderRoutePath = (route: TransportRoute) => {
     let colors = defRoutePathColors;
@@ -219,8 +223,9 @@ export const MapPage: FC<Props> = () => {
       routes={routes}
       selectedRoutes={selectedRoutes}
       size={stationMarkerSize}
+      compact={stationsCompact}
       route={findRouteWithId(routes, station.rid)}
-      popupOpen={station.sid === stationPopupId}
+      popupOpen={!stationsCompact && station.sid === stationPopupId}
       onClick={handleStationMarkerClick}
       onPopupClose={handleStationMarkerPopupClose}
     />
@@ -276,7 +281,10 @@ export const MapPage: FC<Props> = () => {
         disableDefaultUI
         gestureHandling="greedy"
         onCenterChanged={e => centerStorage.set(e.detail.center)}
-        onZoomChanged={e => zoomStorage.set(e.detail.zoom)}
+        onZoomChanged={e => {
+          zoomStorage.set(e.detail.zoom);
+          setZoom(e.detail.zoom);
+        }}
         onClick={handleMapClick}
       >
         {curRoutes.map(renderRoutePath)}
