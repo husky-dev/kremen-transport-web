@@ -1,5 +1,5 @@
 import { ThemeSwitchBtn } from '@/components/Buttons';
-import { RouteCircle } from '@/components/Transport';
+import { ConnectionStatus, RouteCircle, StatusChip } from '@/components/Transport';
 import RouteSelectGroup from '@/components/Transport/RouteSelectGroup';
 import { sortRoutes } from '@/core/transport';
 import { routes as appRoutes } from '@/pages/routes';
@@ -12,23 +12,27 @@ interface Props extends StyleProps {
   readonly routes: TransportRoute[];
   readonly selected: number[];
   readonly activeBusCount?: number;
+  readonly status: ConnectionStatus;
   readonly onSelectedChange: (selected: number[]) => void;
 }
 
-export const RoutesPanel: FC<Props> = ({ style, className, routes, selected, activeBusCount, onSelectedChange }) => {
+export const RoutesPanel: FC<Props> = ({ style, className, routes, selected, activeBusCount, status, onSelectedChange }) => {
   const { troutes = [], broutes = [] } = groupBy(routes, route => (route.number.indexOf('Т') === -1 ? 'broutes' : 'troutes'));
   const selectedRoutes = sortRoutes(compact(selected.map(rid => routes.find(item => item.rid === rid))));
 
   return (
     <div style={ms(style)} className={mc('bg-base-100 rounded-lg', className)}>
       <div className="flex flex-row items-center justify-between px-3 pt-2 pb-1">
-        <div className="flex items-center gap-2">
-          <span className="font-semibold text-base">{'#Кремінь.Транспорт'}</span>
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="font-semibold text-base truncate">{'#Кремінь.Транспорт'}</span>
           {activeBusCount !== undefined && activeBusCount > 0 && (
             <span className="badge badge-outline badge-sm tabular-nums">{activeBusCount}</span>
           )}
         </div>
-        <ThemeSwitchBtn className="btn btn-square btn-ghost btn-sm" />
+        <div className="flex items-center gap-2 min-w-0">
+          <StatusChip className="sm:hidden" status={status} compact />
+          <ThemeSwitchBtn className="btn btn-square btn-ghost btn-sm" />
+        </div>
       </div>
       <div className={mc('collapse collapse-arrow')}>
         <input type="checkbox" />

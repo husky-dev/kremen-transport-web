@@ -4,3 +4,4 @@ export * from './BusMaker';
 export * from './StationMarker';
 export * from './CurPositionMarker';
 export * from './RouteCircle';
+export * from './StatusChip';

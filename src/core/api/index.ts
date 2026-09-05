@@ -7,6 +7,7 @@ import {
   TransportBusesLocations,
   TransportPrediction,
   TransportRoute,
+  TransportStatus,
 } from '@/types';
 import { isStr } from '@/utils';
 import axios from 'axios';
@@ -44,6 +45,7 @@ export const getApi = ({ apiRoot }: ApiOpt) => {
       routes: async (): Promise<TransportRoute[]> => apiReq<TransportRoute[]>({ path: `transport/routes` }),
       buses: async (): Promise<TransportBus[]> => apiReq<TransportBus[]>({ path: `transport/buses` }),
       busesLocations: async () => apiReq<TransportBusesLocations>({ path: `transport/buses/locations` }),
+      status: async (): Promise<TransportStatus> => apiReq<TransportStatus>({ path: `transport/status` }),
       stationPrediction: async (sid: number): Promise<TransportPrediction[]> =>
         apiReq<TransportPrediction[]>({ path: `transport/stations/${sid}/prediction` }),
     },

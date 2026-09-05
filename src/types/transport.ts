@@ -132,3 +132,17 @@ export interface TransportDataSourcePrediction {
 export interface TransportBusesLocations {
   [key: string]: number[];
 }
+
+export enum TransportStatusCode {
+  ServiceDown = 'SERVICE_DOWN',
+  StaleData = 'STALE_DATA',
+}
+
+export interface TransportStatus {
+  datasource: {
+    status: 'ok' | 'error';
+    code?: TransportStatusCode;
+    message?: string;
+    lastSuccessAt?: number;
+  };
+}

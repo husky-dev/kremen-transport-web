@@ -6,6 +6,7 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { ContentPage, ThemeProvider } from './components/Layout';
+import { config } from './core/config';
 import { MapPage } from './pages';
 import AboutContent from './pages/About.md';
 import PrivacyContent from './pages/Privacy.md';
@@ -34,5 +35,11 @@ if (container) {
 }
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js');
+  if (config.env === 'production') {
+    navigator.serviceWorker.register('/sw.js');
+  } else {
+    // A worker left over from an earlier session keeps serving its cached bundle, so rebuilds never show up
+    navigator.serviceWorker.getRegistrations().then(items => items.forEach(item => item.unregister()));
+    if ('caches' in window) caches.keys().then(keys => keys.forEach(key => caches.delete(key)));
+  }
 }

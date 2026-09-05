@@ -58,14 +58,14 @@ const getParams = () => {
 
 /* Envs */
 
-const getEnvName = () => {
+const getEnvName = (defaultToDev = false) => {
   const nodeEnv = process.env.NODE_ENV;
   if (nodeEnv) {
     const modNodeEnv = nodeEnv.toLowerCase();
     if (['dev', 'develop', 'development'].includes(modNodeEnv)) return 'development';
     if (['prd', 'prod', 'production'].includes(modNodeEnv)) return 'production';
   }
-  return 'production';
+  return defaultToDev ? 'development' : 'production';
 };
 
 const getEnvValue = (key, defaultValue) => {
@@ -225,7 +225,8 @@ const run = async () => {
   const params = getParams();
   log.debug('params=', params);
 
-  const env = getEnvName();
+  // `--serve` is the dev server, so it defaults to development; NODE_ENV still overrides
+  const env = getEnvName(params.serve);
   log.debug('env=', env);
 
   log.info('copy public files');

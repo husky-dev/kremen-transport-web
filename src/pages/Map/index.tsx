@@ -1,6 +1,6 @@
 import { PageTitle } from '@/components/Layout';
 import { MapPinIcon, MinusIcon, PlusIcon } from '@heroicons/react/24/outline';
-import { BusMarker, CurPositionMarker, RoutePath, StationMarker } from '@/components/Transport';
+import { BusMarker, ConnectionStatus, CurPositionMarker, RoutePath, StationMarker, StatusChip } from '@/components/Transport';
 import { api } from '@/core/api';
 import { Log } from '@/core/log';
 import { defRoutePathColors, findRouteWithId, routeIdToColor, routesToStatiosn, routeToColor } from '@/core/transport';
@@ -36,6 +36,8 @@ type Props = StyleProps & TestIdProps;
 const mapMarkerSize = 46;
 const stationMarkerSize = Math.round(mapMarkerSize / 2.7);
 const StationIconMinZoom = 16;
+const LocationsIntervalMs = 1000 * 3;
+const StatusIntervalMs = 1000 * 30;
 
 const busesStorage = getStorage({ key: 'kremen:buses', guard: isTransportBusArrOrUndef });
 const routesStorage = getStorage({ key: 'kremen:routes', guard: isTransportRouteArrOrUndef });
@@ -67,15 +69,24 @@ export const MapPage: FC<Props> = () => {
 
   const [zoom, setZoom] = useState<number>(zoomStorage.get() || 14);
 
+  const [datasourceOk, setDatasourceOk] = useState(true);
+  const [connected, setConnected] = useState(true);
+
   const [curPosition, setCurPosition] = useState<LatLng | undefined>(undefined);
   const [geoRequesting, setGeoRequesting] = useState(false);
 
   useEffect(() => {
     fullUpdate();
+    statusUpdate();
   }, []);
 
   useEffect(() => {
-    const interval = setInterval(() => locationsUpdate(), 1000 * 3);
+    const interval = setInterval(() => locationsUpdate(), LocationsIntervalMs);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => statusUpdate(), StatusIntervalMs);
     return () => clearInterval(interval);
   }, []);
 
@@ -98,12 +109,27 @@ export const MapPage: FC<Props> = () => {
       log.debug('locations update');
       const locations = await api.transport.busesLocations();
       log.debug('locations update done');
+      setConnected(true);
       setBuses(b => {
         const newBusses = updateBusesWithLocations(b, locations);
         busesStorage.set(newBusses);
         return newBusses;
       });
     } catch (err: unknown) {
+      setConnected(false);
+      log.err(errToStr(err));
+    }
+  };
+
+  const statusUpdate = async () => {
+    try {
+      log.debug('status update');
+      const { datasource } = await api.transport.status();
+      log.debug('status update done');
+      setConnected(true);
+      setDatasourceOk(datasource.status === 'ok');
+    } catch (err: unknown) {
+      setConnected(false);
       log.err(errToStr(err));
     }
   };
@@ -198,6 +224,7 @@ export const MapPage: FC<Props> = () => {
   const curBuses = buses.filter(({ rid }) => selectedRoutes.includes(rid));
   const curStations = routesToStatiosn(curRoutes);
   const stationsCompact = zoom < StationIconMinZoom;
+  const connectionStatus: ConnectionStatus = !connected ? 'offline' : datasourceOk ? 'ok' : 'error';
 
   const renderRoutePath = (route: TransportRoute) => {
     let colors = defRoutePathColors;
@@ -335,8 +362,12 @@ export const MapPage: FC<Props> = () => {
           routes={routes}
           selected={selectedRoutes}
           activeBusCount={curBuses.length}
+          status={connectionStatus}
           onSelectedChange={handleDisplayedRoutesChange}
         />
+      </div>
+      <div className="absolute right-4 z-30 hidden sm:block" style={{ top: 'max(0.5rem, env(safe-area-inset-top))' }}>
+        <StatusChip status={connectionStatus} />
       </div>
     </>
   );
